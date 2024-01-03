@@ -1,0 +1,208 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{pgfplots}
+\usepackage{esdiff}
+\usepackage{tabularx}
+\usepackage{array}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisbcbcym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\renewcommand*{\arraystretch}{1.5}
+
+\title{HW-7}
+\author{Drew Morris}
+\date{October 24th, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}
+Consider the following Linear Programming Problem. \\
+\begin{center}\begin{tabular}{ccccccccccc}
+  maximize   & $x_1$  & $+$ & $2x_2$ & $+$ & $x_3$  & $+$ & $x_4$  &        &      \\
+  subject to & $2x_1$ & $+$ & $x_2$  & $+$ & $5x_3$ & $+$ & $x_4$  & $\leq$ & $8$  \\
+             & $2x_1$ & $+$ & $2x_2$ & $+$ & $0x_3$ & $+$ & $4x_4$ & $\leq$ & $12$ \\
+             & $3x_1$ & $+$ & $x_2$  & $+$ & $2x_3$ & $+$ & $0x_4$ & $\leq$ & $18$ \\
+             & $x_1$  & $,$ & $x_2$  & $,$ & $x_3$  & $,$ & $x_4$  & $\geq$ & $0$  \\
+\end{tabular}\end{center}
+This is its final dictionary where $x_5,x_6,x_7$ are slack variables. \\
+\begin{center}\begin{tabular}{|ccccccccccc|}
+  \hline
+  $\zeta$ & $=$ & $\frac{62}{5}$ & $-$ & $\frac{6}{5}x_1$ & $-$ & $\frac{1}{5}x_5$ & $-$ & $\frac{9}{10}x_6$ & $-$ & $\frac{14}{5}x_4$ \\
+  \hline
+  $x_2$   & $=$ & $6$            & $-$ & $x_1$            & $+$ & $0x_5$           & $-$ & $\frac{1}{2}x_6$  & $-$ & $2x_4$            \\
+  $x_3$   & $=$ & $\frac{2}{5}$  & $-$ & $\frac{1}{5}x_1$ & $-$ & $\frac{1}{5}x_5$ & $+$ & $\frac{1}{10}x_6$ & $+$ & $\frac{1}{5}x_4$  \\
+  $x_7$   & $=$ & $\frac{56}{5}$ & $-$ & $\frac{8}{5}x_1$ & $+$ & $\frac{2}{5}x_5$ & $+$ & $\frac{3}{10}x_6$ & $+$ & $\frac{8}{5}x_4$  \\
+  \hline
+\end{tabular}\end{center}
+What is the optimal solution for each of the modified problems? \\
+\begin{enumerate}
+  \item The objective function is $3x_1 + 2x_2 + x_3 + x_4$. \\
+  \item The objective function is $x_1 + 2x_2 + \frac{1}{2}x_3 + x_4$. \\
+  \item The second constraint is $2x_1 + 2x_2 + 0x_3 + 4x_4 \leq 26$. \\
+\end{enumerate}
+\end{prob}
+\begin{enumerate}
+  \item The optimal solution is $\mathbf{x} = \begin{bmatrix} 
+      2 & 4 & 0 & 0 & 0 & 0 & 8 \\
+    \end{bmatrix}^T$ with $\zeta = 14$. \\
+  \item The optimal solution is $\mathbf{x} = \begin{bmatrix}
+      0 & 6 & \frac{2}{5} & 0 & 0 & 0 & \frac{56}{5} \\
+    \end{bmatrix}^T$ with $\zeta = \frac{61}{5}$. \\
+  \item The optimal solution is $\mathbf{x} = \begin{bmatrix}
+      0 & 8 & 0 & 0 & 0 & 10 & 10 \\
+    \end{bmatrix}^T$ with $\zeta = 16$. \\
+\end{enumerate}
+
+\begin{prob}
+In reference to the previous problem, find the range over the objective 
+coefficients for which the final dictionary remains optimal. \\
+\end{prob}
+\begin{proof}
+  In other words, we wish to find $\mathbf{c}$ such that $\langle \mathbf{c},
+  \mathbf{x}_{\mathscr{N}} \rangle$ is optimal where $\mathbf{x}_{\mathscr{N}} = \begin{bmatrix}
+    0 \\ 
+    6 \\ 
+    \frac{2}{5} \\ 
+    0 \\ 
+  \end{bmatrix}$. Notice in the final dictionary above, $x_1,x_4$ are non-basic 
+  with objective coefficients of $-\frac{6}{5},-\frac{14}{5}$ respectively. Thus 
+  $c_1,c_4$ must be at most $\frac{6}{5},\frac{14}{5}$ respectively. Furthermore, 
+  $c_2,c_3$ must be chosen such that the resulting objective coefficients 
+  attached to $x_5,x_6$ are at most $\frac{1}{5},\frac{9}{10}$ respectively. This 
+  yields $c_2 \in [-\frac{6}{5},\infty)$ and $c_3 \in [-1,9]$. Thus \\
+  \[\mathbf{c} \in \bigg(-\infty,\frac{6}{5}\bigg] \times \bigg[-\frac{6}{5},
+    \infty\bigg) \times \bigg[-1,9\bigg] \times \bigg(-\infty,\frac{14}{5}\bigg]\] \\
+\end{proof}
+
+\begin{prob}
+Consider the following dictionary. \\
+\begin{center}\begin{tabular}{|ccccccc|}
+\hline
+$\zeta$ & $=$ & $-3$         & $-$ & $(11 + 5\mu)x_1$ & $-$ & $(-2 + 2\mu)x_4$ \\
+\hline
+$x_3$   & $=$ & $(-2 + \mu)$ & $-$ & $5x_1$           & $+$ & $x_4$            \\
+$x_2$   & $=$ & $(3 - \mu)$  & $+$ & $x_1$            & $+$ & $x_4$            \\
+$x_5$   & $=$ & $(1 + 2\mu)$ & $+$ & $3x_1$           & $+$ & $x_4$            \\
+\hline
+\end{tabular}\end{center}
+For what values of $\mu$ is this dictionary optimal? \\
+\end{prob}
+\begin{proof}
+For this dictionary to be optimal, the following must be true. \\
+\[11 + 5\mu \geq 0, -2 + 2\mu \geq 0, -2 + \mu \geq 0, 3 - \mu \geq 0, 1 + 2\mu \geq 0\] \\
+i.e. \\
+\[\mu \geq -\frac{11}{5}, \mu \geq 1, \mu \geq 2, \mu \leq 3, \mu \geq \frac{1}{2}\] \\
+Thus \\
+\[\mu \in \bigg[-\frac{11}{5},\infty\bigg) \cap [1,\infty) \cap [2,\infty) \cap 
+(\infty,3] \cap \bigg[\frac{1}{2},\infty\bigg) = [2,3]\] \\
+\end{proof}
+
+\begin{prob}
+  Let $A \in M_{m \times n}(\F)$ and $\mathbf{c} \in \F^n$ for some $m,n \in \N_0$. 
+  Let $\xi^*: \F^m \to \F$ be a function such that for each $\mathbf{b} \in \F^m, 
+  \xi^*(\mathbf{b})$ is the optimal objective function value for the following 
+  linear programming problem. \\
+  \begin{center}\begin{tabular}{cccc}
+    maximize   & $\mathbf{c}^T\mathbf{x}$ &        &              \\
+    subject to & $A\mathbf{x}$            & $\leq$ & $\mathbf{b}$ \\
+               & $\forall_{i=1}^{n}x_i$   & $\geq$ & $0$          \\
+  \end{tabular}\end{center}
+  Suppose $\xi^*(\mathbf{b}) < \infty$ for every $\mathbf{b} \in \F^m$. Prove 
+  $\xi^*$ is a concave function. \\
+\end{prob}
+\begin{proof}
+  Let $\mathbf{u},\mathbf{v} \in \F^m$ and $t \in (0,1)$. We wish to prove \\
+  \[\xi^*(t\mathbf{u} + (1-t)\mathbf{v}) \geq t\xi^*(\mathbf{u}) + (1-t)\xi^*(\mathbf{v})\] \\
+  Without loss of generality, assume $\mathbf{v}\mathbf{x}_u \geq \mathbf{v}\mathbf{x}_v$. 
+  Observe. \\
+  \[t\xi^*(\mathbf{u}) + (1-t)\xi^*{\mathbf{v}} = t\mathbf{u}^T\mathbf{x}_u + 
+  (1-t)\mathbf{v}^T\mathbf{x}_v \leq t\mathbf{u}^T\mathbf{x}_u + (1-t)\mathbf{v}^T
+  \mathbf{x}_u = \] \\
+  \[(t\mathbf{u} + (1-t)\mathbf{v})^T\mathbf{x}_u \leq \xi^*(t\mathbf{u} 
+  + (1-t)\mathbf{v})\] \\
+\end{proof}
+
+\end{document}

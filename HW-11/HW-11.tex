@@ -1,0 +1,139 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{pgfplots}
+\usepackage{esdiff}
+\usepackage{tabularx}
+\usepackage{array}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisbcbcym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\DeclareMathOperator{\argmin}{argmin}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\renewcommand*{\arraystretch}{1.5}
+
+\title{HW-9}
+\author{Drew Morris}
+\date{November 7th, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}
+  Beginning with $(\mathbf{x},\mathbf{w},\mathbf{y},\mathbf{z}) = (\mathbf{e},
+  \mathbf{e},\mathbf{e},\mathbf{e})$ and using $\delta = \frac{1}{10}$ and $r = 
+  \frac{9}{10}$ compute $(\bar{\mathbf{x}},\bar{\mathbf{w}},\bar{\mathbf{y}},
+  \bar{\mathbf{z}})$ after one step of the path following method for each of the 
+  following problems. \\
+  \begin{enumerate}
+    \item Exercise $2.3$ \\
+    \item Exercise $2.4$ \\
+    \item Exercise $2.5$ \\
+    \item Exercise $2.10$ \\
+  \end{enumerate}
+\end{prob}
+\begin{proof}
+With $(\mathbf{x},\mathbf{w},\mathbf{y},\mathbf{z}) = (\mathbf{e},
+\mathbf{e},\mathbf{e},\mathbf{e}), X=W=Y=Z=I$. Thus $\Delta(\mathbf{x},\mathbf{w},
+\mathbf{y},\mathbf{z}) = \begin{bmatrix}
+  -A & I & O & O \\
+  O & O & A^T & I \\
+  I & O & O & I \\
+  O & I & I & O \\
+  \end{bmatrix}^{-1}\begin{bmatrix}
+  \mathbf{b} - A\mathbf{e} - \mathbf{e} \\
+  \mathbf{c} - A^T\mathbf{e} + \mathbf{e} \\
+  \frac{11}{10}\mathbf{e} \\
+  \frac{11}{10}\mathbf{e} \\
+\end{bmatrix} = \begin{bmatrix}
+  -A^{-1} & X & O & A^{-1} \\
+   
+\end{bmatrix}\begin{bmatrix}
+  -A & I & O & O \\
+  O & O & A^T & I \\
+  I & O & O & I \\
+  O & I & I & O \\
+  \end{bmatrix}$
+\end{proof}
+
+\end{document}

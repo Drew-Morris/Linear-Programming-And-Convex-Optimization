@@ -1,0 +1,258 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{pgfplots}
+\usepackage{esdiff}
+\usepackage{tabularx}
+\usepackage{array}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisbcbcym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\title{HW-5}
+\author{Drew Morris}
+\date{October 9th, 2023}
+
+\begin{document}
+
+\maketitle
+
+\renewcommand*{\arraystretch}{1.5}
+
+\begin{prob}
+Consider the following linear programming problem. \\
+\begin{center}\begin{tabular}{rccccccccc}
+  maximize   & $2x_0$  & $+$ & $8x_1$ & $-$ & $x_2$  & $-$ & $2x_3$ &        &               \\
+  subject to & $2x_0$  & $+$ & $3x_1$ & $+$ & $0x_2$ & $+$ & $6x_3$ & $\leq$ & $6$           \\
+             & $-2x_0$ & $+$ & $4x_1$ & $+$ & $3x_2$ & $+$ & $0x_3$ & $\leq$ & $\frac{3}{2}$ \\
+             & $3x_0$  & $+$ & $2x_1$ & $-$ & $2x_2$ & $-$ & $4x_3$ & $\leq$ & $4$           \\
+             & $x_0$   & ,   & $x_1$  & ,   & $x_2$  & ,   & $x_3$  & $\geq$ & $0$           \\
+\end{tabular}\end{center}
+Do the dual primal/dual solutions from the previous homework satisfy the 
+complementary slackness theorem. \\
+\end{prob}
+\begin{proof}
+  Observe the initial primal and dual initial dictionaries. \\ 
+  \begin{center}\begin{tabular}{|ccccccccccc|}
+    \hline
+    $\zeta$ & $=$ & $0$           & $+$ & $2x_0$ & $+$ & $8x_1$ & $-$ & $x_2$  & $-$ & $2x_3$ \\
+    \hline
+    $u_0$   & $=$ & $6$           & $-$ & $2x_0$ & $-$ & $3x_1$ & $+$ & $0x_2$ & $-$ & $6x_3$ \\
+    $u_1$   & $=$ & $\frac{3}{2}$ & $+$ & $2x_0$ & $-$ & $4x_1$ & $-$ & $3x_2$ & $+$ & $0x_3$ \\
+    $u_2$   & $=$ & $4$           & $-$ & $3x_0$ & $-$ & $2x_1$ & $+$ & $2x_2$ & $+$ & $4x_3$ \\
+    \hline
+  \end{tabular}\quad\begin{tabular}{|ccccccccc|}
+    \hline
+    $\xi$ & $=$ & $0$  & $+$ & $6y_0$ & $+$ & $\frac{3}{2}y_1$ & $+$ & $4y_2$ \\
+    \hline
+    $v_0$ & $=$ & $2$  & $-$ & $2y_0$ & $+$ & $2y_1$ & $-$ & $3y_2$ \\
+    $v_1$ & $=$ & $8$  & $-$ & $3y_0$ & $-$ & $4y_1$ & $-$ & $2y_2$ \\
+    $v_2$ & $=$ & $-1$ & $+$ & $0y_0$ & $-$ & $3y_1$ & $+$ & $2y_2$ \\
+    $v_3$ & $=$ & $-2$ & $-$ & $6y_0$ & $+$ & $0y_1$ & $+$ & $4y_2$ \\
+    \hline
+  \end{tabular}\end{center}
+  Recall that our primal solution was $\mathbf{x} = \begin{bmatrix}
+  \frac{13}{16} & \frac{3}{8} & 0 & \frac{65}{304} \\ \end{bmatrix}^T$. If this 
+  solution satisfies the complementary slackness theorem then $\mathbf{v} = 
+  \begin{bmatrix}
+  0 & 0 & v_2 & 0 \\
+  \end{bmatrix}$ where $v_2 \in \F$. Looking at the dual problem we see the dual 
+  solution must satisfy the following matrix solution. \\
+  \[\begin{bmatrix}[cccc|c]
+    2 & -2 & 3  & 0   & 2  \\
+    3 & 4  & 2  & 0   & 8  \\
+    0 & 3  & -2 & v_2 & -1 \\
+    6 & 0  & -4 & 0   & -2 \\
+    \end{bmatrix} \overset{R_3 \leftrightarrow R_4}{\longrightarrow} \begin{bmatrix}[cccc|c]
+    2 & -2 & 3  & 0   & 2  \\
+    3 & 4  & 2  & 0   & 8  \\
+    6 & 0  & -4 & 0   & -2 \\
+    0 & 3  & -2 & v_2 & -1 \\
+    \end{bmatrix} \overset{\frac{1}{2}R_1}{\longrightarrow} \begin{bmatrix}[cccc|c]
+    1 & -1 & \frac{3}{2} & 0   & 1  \\
+    3 & 4  & 2           & 0   & 8  \\
+    6 & 0  & -4          & 0   & -2 \\
+    0 & 3  & -2          & v_2 & -1 \\
+  \end{bmatrix} \overset{R_2 - 3R_1}{\longrightarrow} ... \overset{R_4 - 6R_1}{\longrightarrow}\] 
+  \[\begin{bmatrix}[cccc|c]
+    1 & -1 & \frac{3}{2}  & 0   & 1  \\
+    0 & 7  & -\frac{5}{2} & 0   & 5  \\
+    0 & 6  & -13          & 0   & -8 \\
+    0 & 3  & -2           & v_2 & -1 \\
+    \end{bmatrix} \overset{\frac{1}{7}R_2}{\longrightarrow} \begin{bmatrix}[cccc|c]
+    1 & -1 & \frac{3}{2}   & 0   & 1            \\
+    0 & 1  & -\frac{5}{14} & 0   & \frac{5}{7}  \\
+    0 & 6  & -13           & 0   & -8           \\
+    0 & 3  & -2            & v_2 & -1           \\
+  \end{bmatrix} \overset{R_3 - 6R_2}{\longrightarrow} ... \overset{R_4 - 3R_2}{\longrightarrow}\]
+  \[\begin{bmatrix}[cccc|c]
+    1 & -1 & \frac{3}{2}    & 0   & 1             \\
+    0 & 1  & -\frac{5}{14}  & 0   & \frac{5}{7}   \\
+    0 & 0  & -\frac{76}{7}  & 0   & -\frac{26}{7} \\
+    0 & 0  & -\frac{13}{14} & v_2 & -\frac{22}{7} \\
+    \end{bmatrix} \overset{-\frac{7}{76}R_3}{\longrightarrow} \begin{bmatrix}[cccc|c]
+    1 & -1 & \frac{3}{2}    & 0   & 1             \\
+    0 & 1  & -\frac{5}{14}  & 0   & \frac{5}{7}   \\
+    0 & 0  & 1              & 0   & \frac{13}{38} \\
+    0 & 0  & -\frac{13}{14} & v_2 & -\frac{22}{7} \\
+  \end{bmatrix} \overset{R_4 + \frac{13}{14}R_3}{\longrightarrow}\]
+  \[\begin{bmatrix}[cccc|c]
+    1 & -1 & \frac{3}{2}   & 0   & 1                 \\
+    0 & 1  & -\frac{5}{14} & 0   & \frac{5}{7}       \\
+    0 & 0  & 1             & 0   & \frac{13}{38}     \\
+    0 & 0  & 0             & v_2 & -\frac{1503}{532} \\
+    \end{bmatrix} \overset{R_1 - \frac{3}{2}R_3}{\longrightarrow} ... \overset{R_2 + \frac{5}{14}R_3}{\longrightarrow} \begin{bmatrix}[cccc|c]
+    1 & -1 & 0 & 0   & \frac{37}{76}    \\
+    0 & 1  & 0 & 0   & \frac{445}{532}  \\
+    0 & 0  & 1 & 0   & \frac{13}{38}    \\
+    0 & 0  & 0 & v_2 & \frac{1503}{532} \\
+  \end{bmatrix} \overset{R_1 + R_2}{\longrightarrow} \]
+  \[\begin{bmatrix}[cccc|c]
+    1 & 0 & 0 & 0   & \frac{176}{133}  \\
+    0 & 1 & 0 & 0   & \frac{445}{532}  \\
+    0 & 0 & 1 & 0   & \frac{13}{38}    \\
+    0 & 0 & 0 & v_2 & \frac{1503}{532} \\
+  \end{bmatrix}\]
+  Thus we see $v_2 \neq 0 \implies x_2 = 0$. Additionally, $\mathbf{y} = \begin{bmatrix}
+    \frac{176}{133} & \frac{445}{532} & \frac{13}{38} & \frac{1503}{532} \\
+  \end{bmatrix}^T$ so $\mathbf{u} = \begin{bmatrix}
+    0 & 0 & 0 \\
+  \end{bmatrix}$. Thus \\
+  \[6 - 2\bigg(\frac{13}{16}\bigg) - 3\bigg(\frac{3}{8}\bigg) - 6\bigg(
+  \frac{65}{304}\bigg) = 0\] \\
+  i.e. \\
+  \[\frac{299}{152} = 0\] \\
+  which is false. Therefore, our solutions are non-optimal. \\
+\end{proof}
+
+\begin{prob}
+Consider the following process. \\
+Take a linear programming problem in standard 
+form. Form its dual problem. Replace the minimization in the dual problem with 
+maximization. By strong duality, the optimal solution to this new problem must 
+be equal to the original problem's optimal solution. By the following inequalities. \\
+\[\zeta^*(a_{(i,j)},b_i,c_j) \leq \zeta^*(-a_{(j,i)},-c_j,b_i) \leq \zeta^*(
+a_{(i,j)},-b_i,-c_j) \leq \zeta^*(-a_{(j,i)},c_j,-b_i) \leq \zeta^*(a_{(i,j)},
+b_i,c_j)\] \\
+While this logic may sometimes work, it is not always true. What is the flaw in 
+this logic? Can you a state a correct (non-trivial) theorem along the same kind 
+of reasoning? Can you give an example where these above inequalities are equalities?
+\end{prob}
+\begin{proof}
+Swapping min with max without negating the objective function does not create an 
+equivalent dual problem and as such, strong duality cannot be applied. If we 
+make this adjustment, we get a rephrasing of the Strong Duality Theorem. A (albeit 
+trivial) example that does use the non-negated maximization version of the dual 
+problem that satisfies making all the listed inequalities into equality would be 
+a case where the objective function is the zero function. \\
+\end{proof}
+
+\begin{prob}
+Let $m$ be the number of nutrients found to be important to a subjects diet and 
+let $b_i, i \in \N \cap [1,m]$ denote the minimum daily requirements for each 
+nutrient. Now let $n$ be a list of foods such that $c_j, j \in \N \cap [1,n]$ 
+denotes the prices (per unit) of each of these foods. Finally, let $a_{(i,j)}$ 
+be the amount of nutrient $i$ contained in food $j$. The following linear 
+programming problem will minimizes cost while still satisfying the minimum 
+required nutrients. \\
+\begin{center}\begin{tabular}{rcccc}
+  minimize &   $\sum_{j=1}^{n}c_jx_j$                         &        &       \\
+  subject to & $\forall_{i=1}^{m} \sum_{j=1}^{n}a_{(i,j)}x_j$ & $\geq$ & $b_i$ \\
+             & $\forall_{j=1}^{n} x_j$                        & $\geq$ & $0$   \\
+\end{tabular}\end{center}
+Formulate the dual problem. Can you introduce another person into the given story 
+whose problem would naturally be to solve the dual problem? \\
+\end{prob}
+\begin{proof}
+The dual problem would be the following. \\
+\begin{center}\begin{tabular}{rcccc}
+  maximize   & $\sum_{i=1}^{m}b_iy_i$                         &        &       \\
+  subject to & $\forall_{j=1}^{n} \sum_{i=1}^{m}a_{(j,i)}y_i$ & $\leq$ & $c_j$ \\
+             & $\forall_{i=1}^{m} y_i$                        & $\leq$ & $0$   \\
+\end{tabular}\end{center}
+In words, maximize the nutrients of a diet subject to budget constraints. A 
+character whose natural problem would be to solve this would be a nurse caring 
+for nutrient-deficient patients. This nurse is alloted a budget for their patient 
+and, with that, wishes to maximize their patient's nutrient intake. \\
+\end{proof}
+
+\end{document}

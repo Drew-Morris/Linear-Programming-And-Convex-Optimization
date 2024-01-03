@@ -1,0 +1,295 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{pgfplots}
+\usepackage{esdiff}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisbcbcym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\DeclareMathOperator{\vspan}{span}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\title{HW-4}
+\author{Drew Morris}
+\date{October 2nd 2023}
+
+\begin{document}
+
+\maketitle
+
+\renewcommand{\arraystretch}{1.5}
+
+\begin{prob}
+Illustrate Theorem $5.2$ on the problem from Exercise $2.1$.
+\end{prob}
+\begin{proof}
+Here is the primal problem from Exercise $2.1$. \\
+\begin{center}\begin{tabular}{|ccccccccccc|}
+\hline
+$\zeta$ & $=$ & $0$ & $+$ & $6x_0$ & $+$ & $8x_1$ & $+$ & $5x_2$ & $+$ & $9x_3$ \\
+\hline
+$u_0$   & $=$ & $5$ & $-$ & $2x_0$ & $-$ & $x_1$  & $-$ & $x_2$  & $-$ & $3x_3$ \\
+$u_1$   & $=$ & $3$ & $-$ & $x_0$  & $-$ & $3x_1$ & $-$ & $x_2$  & $-$ & $2x_3$ \\
+\hline
+\end{tabular}\end{center}
+Now we will analyze the dual problem. \\
+\begin{center}\begin{tabular}{ccccc}
+\begin{tabular}{|ccccccc|}
+\hline
+$-\xi$ & $=$ & $0$ & $-$ & $5y_0$ & $-$ & $3y_1$ \\
+\hline
+$v_0$ & $=$ & $-6$ & $+$ & $2y_0$ & $+$ & $y_1$  \\
+$v_1$ & $=$ & $-8$ & $+$ & $y_0$  & $+$ & $3y_1$ \\
+$v_2$ & $=$ & $-5$ & $+$ & $y_0$  & $+$ & $y_1$  \\
+$v_3$ & $=$ & $-9$ & $+$ & $3y_0$ & $+$ & $2y_1$ \\
+\hline
+\end{tabular} & $\to$ & $y_0 = 3$ & $\to$ \\
+\begin{tabular}{|ccccccc|}
+\hline
+$-\xi$ & $=$ & $-15$ & $+$ & $\frac{5}{2}v_0$ & $-$ & $\frac{1}{2}y_1$ \\
+\hline
+$y_0$ & $=$ & $3$ & $-$  & $\frac{1}{2}v_0$ & $-$ & $\frac{1}{2}y_1$ \\
+$v_1$ & $=$ & $-5$ & $-$  & $\frac{1}{2}v_0$ & $+$ & $\frac{5}{2}y_1$ \\
+$v_2$ & $=$ & $-2$ & $-$  & $\frac{1}{2}v_0$ & $+$ & $\frac{1}{2}y_1$ \\
+$v_3$ & $=$ & $0$ & $-$  & $\frac{3}{2}v_0$ & $+$ & $\frac{1}{2}y_1$ \\
+\hline
+\end{tabular} & $\to$ & $y_1 = 0$ & $\to$ \\
+\begin{tabular}{|ccccccc|}
+\hline
+$-\xi$ & $=$ & $-15$ & $+$ & $v_0$  & $+$ & $v_3$  \\
+\hline
+$y_0$ & $=$ & $3$ & $-$  & $2v_0$ & $+$ & $v_3$  \\
+$v_1$ & $=$ & $-5$ & $+$  & $7v_0$ & $-$ & $5v_3$ \\
+$v_2$ & $=$ & $-2$ & $+$  & $v_0$  & $-$ & $v_3$  \\
+$y_1$ & $=$ & $0$ & $+$  & $3v_0$ & $+$ & $2v_3$ \\
+\hline
+\end{tabular} & $\to$ & \multicolumn{2}{c}{$\xi = 15$}
+\end{tabular}\end{center}
+This is an optimal solution of the dual problem, thus $\zeta = 15$ is also an 
+optimal solution for the primal problem.
+\end{proof}
+
+\begin{prob}
+Consider the following linear programming problem. \\
+\begin{center}\begin{tabular}{|ccccccccccc|}
+\hline
+$\zeta$ & $=$ & $0$           & $+$ & $2x_0$ & $+$ & $8x_1$ & $-$ & $x_2$  & $-$ & $2x_3$ \\
+\hline
+$u_0$   & $=$ & $6$           & $-$ & $2x_0$ & $-$ & $3x_1$ & $+$ & $0x_2$ & $-$ & $6x_3$ \\
+$u_1$   & $=$ & $\frac{3}{2}$ & $+$ & $x_0$  & $-$ & $4x_1$ & $-$ & $3x_2$ & $+$ & $0x_3$ \\
+$u_2$   & $=$ & $4$           & $-$ & $3x_0$ & $-$ & $2x_1$ & $+$ & $2x_2$ & $+$ & $4x_3$ \\
+\hline
+\end{tabular}\end{center}
+Suppose in solving this problem you arrive at the following dictionary. \\
+\begin{center}\begin{tabular}{|ccccccccccc|}
+\hline
+$\zeta$ & $=$ & $\frac{7}{2}$ & $-$ & $\frac{1}{4}u_0$ & $+$ & $\frac{25}{4}x_1$ & $-$ & $\frac{1}{2}u_2$ & $-$ & $\frac{3}{2}x_3$  \\
+\hline
+$x_0$   & $=$ & $3$           & $-$ & $\frac{1}{2}u_0$ & $-$ & $\frac{3}{2}x_1$  & $+$ & $0u_2$           & $-$ & $3x_3$            \\
+$u_1$   & $=$ & $0$           & $+$ & $\frac{5}{4}u_0$ & $-$ & $\frac{13}{4}x_1$ & $-$ & $\frac{3}{2}u_2$ & $+$ & $\frac{27}{2}x_3$ \\
+$u_2$   & $=$ & $\frac{5}{2}$ & $-$ & $\frac{3}{4}u_0$ & $-$ & $\frac{5}{4}x_1$  & $+$ & $\frac{1}{2}u_2$ & $-$ & $\frac{13}{2}x_3$ \\
+\hline
+\end{tabular}\end{center}
+Do the following.
+\begin{enumerate}
+  \item Write the dual problem.
+  \item Which variables are basic/non-basic in the given dictionary?
+  \item Is the primal solution of the given dictionary optimal/degenerate?
+  \item Write down the corresponding dual dictionary.
+  \item Is the dual solution feasible?
+  \item Is the current primal solution optimal?
+  \item For the next primal pivot, which variable will enter/leave under the largest-coefficient 
+    rule and will the pivot be degenerate?
+\end{enumerate}
+\end{prob}
+\begin{enumerate}
+  \item Here is the dual problem. \\
+    \begin{center}\begin{tabular}{|ccccccccc|}
+      \hline
+      $-\xi$ & $=$ & $0$ & $-$ & $6y_0$ & $-$ & $\frac{3}{2}y_1$ & $-$ & $4y_2$ \\
+      \hline
+      $v_0$ & $=$ & $-2$ & $+$ & $2y_0$ & $-$ & $y_1$            & $+$ & $3y_2$ \\
+      $v_1$ & $=$ & $-8$ & $+$ & $3y_0$ & $+$ & $4y_1$           & $+$ & $2y_2$ \\
+      $v_2$ & $=$ & $1$  & $+$ & $0y_0$ & $+$ & $3y_1$           & $-$ & $2y_2$ \\
+      $v_3$ & $=$ & $2$  & $+$ & $6y_0$ & $+$ & $0y_1$           & $-$ & $4y_2$ \\
+      \hline
+    \end{tabular}\end{center}
+  \item $x_0,x_1,x_2,x_3$ are non-basic and $u_0,u_1,u_2$ are basic. \\
+  \item The solution is $\zeta = \frac{7}{2}$ which is feasible but degenerate. \\
+  \item Here is the corresponding dual dictionary. \\
+    \begin{center}\begin{tabular}{|ccccccccc|}
+      \hline
+      $-\xi$ & $=$ & $-\frac{7}{2}$ & $-$ & $3y_0$           & $+$ & $0v_1$            & $-$ & $\frac{5}{2}v_2$  \\
+      \hline
+      $v_0$ & $=$ & $\frac{1}{4}$   & $+$ & $\frac{1}{2}y_0$ & $-$ & $\frac{5}{4}v_1$  & $+$ & $\frac{3}{4}v_2$  \\
+      $y_1$ & $=$ & $-\frac{25}{4}$ & $+$ & $\frac{3}{2}y_0$ & $+$ & $\frac{13}{4}v_1$ & $+$ & $\frac{5}{4}v_2$  \\
+      $v_2$ & $=$ & $\frac{1}{2}$   & $+$ & $0y_0$           & $+$ & $\frac{3}{2}v_1$  & $-$ & $\frac{1}{2}v_2$  \\
+      $y_3$ & $=$ & $\frac{3}{2}$   & $+$ & $3y_0$           & $-$ & $\frac{27}{2}v_1$ & $+$ & $\frac{13}{2}v_2$ \\
+      \hline
+    \end{tabular}\end{center}
+  \item The solution is $-\xi = \frac{7}{2}$ and it is infeasible. \\
+  \item The solution of $\zeta = \frac{7}{2}$ is sub-optimal. \\
+  \item The next primal pivot would yield $x_1$ as the entering variable and $u_1$ 
+    as the exiting variable. This is a degenerate pivot. \\
+\end{enumerate}
+
+\begin{prob}
+Solve the linear programming problem from Exercise $2.4$ using the dual-primal 
+two-phase algorithm.
+\end{prob}
+\begin{proof}
+The initial primal dictionary is this. \\
+\begin{center}\begin{tabular}{|ccccccccc|}
+  \hline
+  $\zeta$ & $=$ & $0$  & $-$ & $x_0$  & $-$ & $3x_1$ & $-$ & $x_2$  \\
+  \hline
+  $u_0$   & $=$ & $-5$ & $-$ & $2x_0$ & $+$ & $5x_1$ & $-$ & $x_2$  \\
+  $u_1$   & $=$ & $4$  & $-$ & $2x_0$ & $+$ & $x_1$  & $-$ & $2x_2$ \\
+  \hline
+\end{tabular}\end{center}
+The initial dual dictionary is this (feasible) with the following solution. \\
+\begin{center}\begin{tabular}{ccccc}
+  \begin{tabular}{|ccccccc|}
+    \hline
+    $-\xi$ & $=$ & $0$ & $+$ & $5y_0$ & $-$ & $4y_1$ \\
+    \hline
+    $v_0$  & $=$ & $1$ & $+$ & $2y_0$ & $+$ & $2y_1$ \\
+    $v_1$  & $=$ & $3$ & $-$ & $5y_0$ & $-$ & $y_1$  \\
+    $v_2$  & $=$ & $1$ & $+$ & $y_0$  & $+$ & $2y_1$ \\
+    \hline
+  \end{tabular} & $\to$ & $y_0 = \frac{3}{5}$ & $\to$ \\
+  \begin{tabular}{|ccccccc|}
+    \hline
+    $-\xi$ & $=$ & $3$            & $-$ & $v_1$            & $-$ & $5y_1$           \\
+    \hline
+    $v_0$  & $=$ & $\frac{11}{5}$ & $-$ & $\frac{2}{5}v_1$ & $+$ & $\frac{8}{5}y_1$ \\
+    $y_0$  & $=$ & $\frac{3}{5}$  & $-$ & $\frac{1}{5}v_1$ & $-$ & $\frac{1}{5}y_1$ \\
+    $v_2$  & $=$ & $\frac{8}{5}$  & $-$ & $\frac{1}{5}v_1$ & $+$ & $\frac{9}{5}y_1$ \\
+    \hline
+  \end{tabular} & $\to$ & $-\xi = 3$ & $\to$ \\
+\end{tabular}\end{center}
+Therefore, $\zeta = 3$. \\
+\end{proof}
+
+\begin{prob}
+Solve the linear programming problem from Exercise $2.6$ using the dual-primal 
+two-phase algorithm.
+\end{prob}
+\begin{proof}
+The initial primal dictionary (infeasible) is this. \\
+\begin{center}\begin{tabular}{|ccccccc|}
+  \hline
+  $\zeta$ & $=$ & $0$  & $+$ & $x_0$ & $+$ & $3x_1$ \\
+  \hline
+  $u_0$   & $=$ & $-3$ & $+$ & $x_0$ & $+$ & $x_1$  \\
+  $u_1$   & $=$ & $-1$ & $+$ & $x_0$ & $-$ & $x_1$  \\
+  $u_2$   & $=$ & $2$  & $-$ & $x_0$ & $-$ & $2x_1$ \\
+  \hline
+\end{tabular}\end{center}
+The initial dual dictionary (infeasible) is this. \\
+\begin{center}\begin{tabular}{|ccccccccc|}
+  \hline
+  $-\xi$ & $=$ & $0$  & $+$ & $3y_0$ & $+$ & $y_1$ & $-$ & $2y_2$ \\
+  \hline
+  $v_0$  & $=$ & $-1$ & $-$ & $y_0$  & $-$ & $y_1$ & $+$ & $y_2$  \\
+  $v_1$  & $=$ & $-3$ & $-$ & $y_0$  & $+$ & $y_1$ & $+$ & $2y_2$ \\
+  \hline
+\end{tabular}\end{center}
+The auxiliary dual dictionary is this with the following solution. \\
+\begin{center}\begin{tabular}{ccccc}
+  \begin{tabular}{|ccccccccc|}
+    \hline
+    $-\xi'$ & $=$ & $0$ & $+$ & $3y_0$ & $+$ & $y_1$ & $-$ & $2y_2$ \\
+    \hline
+    $v_0$   & $=$ & $1$ & $-$ & $y_0$  & $-$ & $y_1$ & $+$ & $y_2$  \\
+    $v_1$   & $=$ & $1$ & $-$ & $y_0$  & $+$ & $y_1$ & $+$ & $2y_2$ \\
+    \hline
+  \end{tabular} & $\to$ & $y_0 = 1$ & $\to$ \\
+  \begin{tabular}{|ccccccccc|}
+    \hline
+    $-\xi'$ & $=$ & $3$ & $-$ & $3v_0$ & $-$ & $2y_1$ & $+$ & $y_2$ \\
+    \hline
+    $y_0$   & $=$ & $1$ & $-$ & $v_0$  & $-$ & $y_1$  & $+$ & $y_2$ \\
+    $v_1$   & $=$ & $0$ & $+$ & $v_0$  & $+$ & $2y_1$ & $+$ & $y_2$ \\
+    \hline
+  \end{tabular} & $\to$ & \multicolumn{2}{c}{$-\xi' = \infty$} \\
+\end{tabular}\end{center}
+The auxiliary dual problem is unbounded, thus the initial is infeasible.
+\end{proof}
+
+\end{document}

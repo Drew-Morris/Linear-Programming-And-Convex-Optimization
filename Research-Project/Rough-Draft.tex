@@ -1,0 +1,654 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{bbm}
+\usepackage{cancel}
+\usepackage{caption}
+\usepackage{cite}
+\usepackage{esdiff}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage[hidelinks]{hyperref}
+\usepackage{mathrsfs}
+\usepackage{pgfplots}
+\usepackage{stmaryrd}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{xcolor,colortbl}
+\usepackage{tabularx}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+\newtheorem{conj}[equation]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\B}{\ensuremath \mathbb{B}}
+\newcommand{\Ord}{\text{Ord}}
+\newcommand{\1}{\ensuremath \mathbbm{1}}
+\newcommand{\Half}{\ensuremath \mathcal{H}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\DeclareMathOperator{\vproj}{proj}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\argmin}{argmin}
+
+\renewcommand*{\arraystretch}{1.5}
+
+\title{Solving IP with LP}
+\author{Drew Morris}
+\date{October 31st, 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{IP-LP Correspondence}
+In this section, we will show how one can use LP to solve an integer programming 
+problem. Consider a linear programming problem of the following form. \\
+\begin{center}\begin{tabular}{rccc}
+  $\max_{\mathbf{x} \in \R^n}$ & $\mathbf{c}^T\mathbf{x}$ &        &              \\
+  subject to                   & $A\mathbf{x}$            & $\leq$ & $\mathbf{b}$ \\
+                               & $\mathbf{x}$             & $\geq$ & $\mathbf{0}$ \\
+\end{tabular}\end{center}
+where $A \in M_{m \times n}(\R)$, $\mathbf{b} \in \R^m$, and $\mathbf{c} \in \R^n$, 
+for some $m,n \in \N_0$. The corresponding integer programming problems can be 
+written in the following form. \\
+\begin{center}\begin{tabular}{rcccc}
+  maximize   & $\mathbf{c}^T\mathbf{x}$ &        &              \\
+  subject to & $A\mathbf{x}$            & $\leq$ & $\mathbf{b}$ \\
+             & $\mathbf{x}$             & $\geq$ & $\mathbf{0}$ \\
+             & $\mathbf{x}$             & $\in$  & $\Z^n$       \\
+\end{tabular}\end{center}
+Notice that the only difference between these problems are the domain of their 
+decision variable(s) ($\R^n$,$\Z^n$ respectively). We will use this fact to show 
+how one could use LP to help solve an integer programming problem. \\ \hfill \break
+For the remainder of this paper we will take $X^* \subseteq X \subseteq 
+\R^n$ to be the optimal and feasible solution spaces for a given linear 
+programming problem, respectively. Similarly, we will take $Z^* \subseteq Z 
+\subseteq \Z^n$ to be the optimal and feasible solution spaces for the IP 
+correspondent. \\
+
+\subsection{IP-LP Minimaxity}
+We will our integer programming problem by solving a problem equivalent to it 
+that is built around minimaxity. Recall our given linear programming problem and 
+observe the equivalent (although trivial) equivalent problem using minimaxity. \\
+\begin{center}\begin{tabular}{rcccc}
+minimize   & $||\mathbf{x}' - \max_{\mathbf{x} \in X}\mathbf{c}^T\mathbf{x}||_2$ &        &                       \\
+subject to & $A\mathbf{x}$                                                       & $\leq$ & $\mathbf{b}$ \\
+           & $\mathbf{x},\mathbf{x}'$                                            & $\geq$ & $\mathbf{0}$ \\
+\end{tabular}\end{center}
+i.e. \\
+\[\min_{\mathbf{x},\mathbf{x}^* \in X,X^*}||\mathbf{x} - \mathbf{x}^*||_2\] \\
+This problem (on its own) is trivial because it requires one to have already 
+solved the linear programming problem it is derived from to solve. Semantically, 
+it says, "To solve a linear programming problem, first solve your linear 
+programming problem and then take the set of solutions in $X$ closest to the 
+optima you found." However, this trivial problem's IP corresepondent is not 
+trivial. Observe. \\
+\begin{center}\begin{tabular}{rcccc}
+minimize   & $||\mathbf{x}' - \max_{\mathbf{x} \in X}\mathbf{c}^T\mathbf{x}||_2$ &        &              \\
+subject to & $A\mathbf{x}$                                                       & $\leq$ & $\mathbf{b}$ \\
+           & $\mathbf{x},\mathbf{x}'$                                            & $\geq$ & $\mathbf{0}$ \\
+           & $\mathbf{x}'$                                                       & $\in$  & $\Z^n$       \\
+\end{tabular}\end{center}
+i.e. \\
+\[\min_{\mathbf{z},\mathbf{x}^* \in Z,X^*}||\mathbf{z} - \mathbf{x}^*||\] \\
+Semantically, this says, "To solve an integer programming problem, first solve 
+its LP correspondent and then take the set of solutions in $Z$ closest to the 
+optima you found." With this we have found the following algorithm for solving 
+an integer programming problem using LP. \\
+\begin{enumerate}
+  \item Solve the LP correspondent. \\
+  \item Exhaustively compute $||\mathbf{z} - \mathbf{x}^*||_2$ for every 
+    $\mathbf{z} \in Z$ and $\mathbf{x}^* \in X^*$. \\
+  \item Take the set of $\mathbf{z}^*$(s) yielding minimal results. \\
+\end{enumerate}
+This is a very inefficient algorithm, but we can improve it by bounding the 
+feasible solution space of our integer programming problem, $Z$. However, we must 
+first prove some important properties of IP and LP and their feasible and optimal 
+solution spaces. \\
+
+\section{IP-LP Solution Space Properties}
+In this section, we will prove some important properties of $X,X^*,Z,Z^*$ to the 
+end of using those properties to improve our algorithm. \\
+
+\subsection{LP Convexity and Polytopicity}
+Let $X^* \subseteq X$ be the set of optimal solutions to a given linear 
+programming problem. \\
+\begin{prop}
+$X^*$ is a convex polytope. \\
+\end{prop}
+\begin{proof}
+Suppose $\mathbf{\hat{x}}_1 \in X^*$. If $\mathbf{\hat{x}}_1$ is unique then $X^* 
+= \{\mathbf{\hat{x}}_1\}$ and we are done. Thus, suppose $\mathbf{\hat{x}}_2 \in 
+X^*$ such that $\mathbf{\hat{x}}_2 \neq \mathbf{\hat{x}}_1$. Then $t
+\mathbf{\hat{x}}_1 + (1-t)\mathbf{\hat{x}}_2 \in X^*$for every $t \in [0,1]$. As 
+such we take $\mathbf{\hat{x}}_1, \mathbf{\hat{x}}_2$ such that they maximize the 
+euclidean metric across the region. If this region spans $X^*$ then we are done, 
+otherwisewe can repeat this process countabily many times until we have a 
+convexly independent set of points, $\hat{X} = \{\mathbf{\hat{x}}_1,...,
+\mathbf{\hat{x}}_k\}$, such that every point, $\mathbf{x} \in X^*$, can be 
+expressed as a convex combination of $\hat{X}$ i.e. for every $\mathbf{x} \in 
+X^*$, there exists $\mathbf{t} \in \R^k,$ such that $\mathbf{t} \geq \mathbf{0}, 
+||\mathbf{t}||_1 = 1$, and \\ 
+\[\begin{bmatrix} \mathbf{\hat{x}}_1 & ... & \mathbf{\hat{x}}_k \\ \end{bmatrix}
+\mathbf{t} = \mathbf{x}\] \\
+which describes a convex polytope of $k$ vertices, and subsequently, at most 
+$k-1$ dimension. \\
+\end{proof}
+\begin{remark}
+For a linear programming problem of $n$ decision variables and $m$ constraints, 
+$X^*$ will be a polytope of at most $m+n$ vertices and at most $n$ dimension. We 
+will prove this remark further on in this paper. \\
+\end{remark}
+As the above is a computable process, the above proof is sufficient to prove that 
+said process can be used for any linear programming problem of up to countably 
+infinitely many constraints and or decision variables. However, by LP being based 
+in linear algebra, which does allow for the existence of vector spaces of 
+uncountably infinite dimension, the above proof is insufficient to prove $X^*$ is 
+a convex polytope for linear programming problems of uncountably many contraints 
+and or decision variables. \\ \hfill \break 
+As such, for the remainder of this paper it is assumed that we are working with 
+linear programming problems of only countably many constraints and or decision 
+variables. \\
+\begin{cor}
+$X$ is a convex polytope. \\
+\end{cor}
+\begin{proof}
+The proof $X$ being a convex polytope follows the same logic as the proof for 
+$X^*$. \\
+\end{proof}
+\begin{remark}
+If $X$ is bounded non-redundantly (meaning that the removal of any constraint 
+would alter the feasible region, $X$) then $X$ has $m+n$ vertices (assuming that 
+we are including the $n$ non-negativity constraints in our set of constraints). 
+This follows from $X$ being a convex polytope. More interestingly, if $X$ has 
+only $m' + n$ binding (non-redudant) constraints, for some $0 \leq m' < m,$ then 
+$X$ is a convex polytope of $m'+n$ vertices. This is a consequence of being able 
+to remove redundant constraints without altering the feasible region. \\ 
+\end{remark}
+\begin{remark}
+If $X$ is decided linearly independently (meaning that there is no subset of 
+constraints that reduces the dimension of the feasible region, $X$, to less than 
+the dimension of the decision variable by forcing any "feasible" region of $n$ 
+decision variables to be linearly dependent) then $X$ is a polytope of $n$ 
+dimension. More interestingly, if $X$ has only $n'$ linearly independent decision 
+variables, for some $0 \leq n' < n,$ then $X$ is a convex polytope of $n'$ 
+dimension. This is a consequence of being able to project our feasible region, 
+its constraints, and our objective function down to $n'$ decision variables, 
+which is $n'$-dimensional, without changing the ordering of the feasible region 
+by nature of lossless (or non-colliding) projection being an isomorphism. \\
+\end{remark}
+Given these two remarks, for the remainder of this paper, without loss of 
+generality, we assume that we are working with linear programming problems with 
+non-redudant constraints and linearly independent decision variables. \\
+
+\subsection{IP Integral Convexity and Polytopicity}
+Let $Z^* \subseteq Z$ be the set of optimal solutions to a given integer 
+programming problem. \\
+\begin{prop}
+$Z^*$ is an integrally convex polytope. \\
+\end{prop}
+\begin{proof}
+By applying the same logic from the proof Proposition II.1., we find a convex 
+polytope, $S,$ with integer vertices, $\hat{Z}$, such that $Z^* \subseteq S$. 
+The non-equivalence $S$ and $Z^*$ is due to $S$ (possibly) containing vectors 
+that are not in $\Z^n$ by nature of containing all convex combinations of 
+$\hat{Z}$. We can resolve this by restricting $S$ to $\Z^n$. Showing, \\ 
+\[S\mid_{\Z^n} = S \cap \Z^n = Z^*\] \\
+which is the set of all integrally convex combinations of $\hat{Z}$ which is, by 
+definition, integrally convex. \\
+\end{proof}
+
+\subsection{IP-LP Non-Intersectionality}
+Let $X^*,Z^*$ be the set of optimal solutions for a pair of correspondent linear 
+and integer programming problems. \\
+\begin{prop}
+$X^*$ contains an integral optima if and only if $X^*$ contains all integral 
+optima. \\
+\end{prop}
+\begin{proof}
+We wish to prove \\
+\[\exists \mathbf{z}^* \in Z^*, \mathbf{z}^* \in X^* \iff \forall \mathbf{z}^* 
+\in Z^*, \mathbf{z}^* \in X^*\] \\
+i.e. \\
+\[Z^* - X^* \neq \emptyset \iff X^* \cap \Z^n = \emptyset\] \\
+We proceed by proving each part of this implication separately. \\ \hfill \break
+$(\impliedby)$ Suppose $X^* \cap \Z^n = \emptyset$. Then, for every $\mathbf{z}^* 
+\in Z^*$, $\mathbf{z}^* \not \in X^*$ since $\mathbf{z}^* \in \Z^n$. Thus 
+$Z^* - X^* = \emptyset$. \\ \hfill \break
+$(\implies)$ Working contrapositively, suppose $X^* \cap Z^* \neq \emptyset$. 
+Then there must exist some $\mathbf{z}^* \in Z^*$ such that $\mathbf{z}^* \in 
+X^*$. Therefore, $\mathbf{z}^*$ is a convex combination of $X^*$. Now, by way of 
+contradiction, suppose there exists $\mathbf{z}' \in Z^*$ such that $\mathbf{z}' 
+\not \in X^*$. If $\mathbf{z}^* = \mathbf{z}'$ then $\mathbf{z}^* \not \in X^*$,
+which is a contradicion. As such, further suppose $\mathbf{z}' \neq 
+\mathbf{z}^*$. Then $\mathbf{z}'$ is not an optima for the given linear 
+programming problem; however, $\mathbf{z}'$ is an optima for the given integer 
+programming problem. Therefore, either $\mathbf{z}'$ is an optima for the given 
+linear programming problem or $\mathbf{z}^*$ is not an optima for the given 
+linear programming problem: both of which are contradictions. Thus $Z^* - X^* = 
+\emptyset$. \\
+\end{proof}
+
+\subsection{LP Vertex Cardinality}
+Assume we are a given a feasible, bounded, linear programming problem of $m$ 
+decision variables and $n$ constraints where $m,n \in \N$, i.e. $A \in 
+M_{m \times n}(\R)$. \\
+\begin{prop}
+$X^*$ is a convex polytope of at least $1$ vertex and at most $m + n$ vertices 
+i.e. \\ 
+\[1 \leq |\hat{X}| \leq m+n\] \\
+\end{prop}
+\begin{proof}
+Assume the above premise. Then the given linear programming problem has at least 
+$1$ solution. Therefore $|\hat{X}| \geq 1$. Furthermore, if there exists an 
+optimal solution to the given linear programming problem, then there must exist 
+an optimal solution on the boundary of the feasible region, $X$. This boundary 
+is defined as the intersection of $m+n$ half spaces, namely the $m$ 
+non-negativity constraints and the $n$ bounding constraints. As such, the 
+boundary of $X$ is a convex polygon of at most $m+n$ vertices. Furthermore, if 
+there exists an optimal solution to the given linear programming problem, then 
+there must exist at least $1$ optimal solution that is also a vertex of the 
+boundary of $X$. Let $\hat{V}$ be the set of vertices on the boundary of $X$ that 
+are also optimal solutions. Then $|\hat{V}| \leq m+n$ and, by the convexity of 
+$X^*, X^*$ is equal to the convex hull of $\hat{V}$. Therefore, $\hat{X} = 
+\hat{V}$ and, consequently, $|\hat{X}| \leq m+n$. \\
+\end{proof}
+
+\subsection{LP Dimensionality}
+Once again, assume we are a given a feasible, bounded, linear programming problem 
+of $m$ decision variables and $n$ constraints where $m,n \in \N$, i.e. $A \in 
+M_{m \times n}(\R)$. \\
+\begin{prop}
+$X^*$ is a convex polytope of at least $0$ dimension and at most $n$ dimension. \\
+\end{prop}
+\begin{proof}
+Assume the above premise. Since $X^*$ is a convex polytope with $1$ to $m+n$ 
+(inclusive) vertices, $\hat{X}$, $X^*$ must have dimension of at least $1-1 = 0$ 
+and at most $m+n-1$. Furthermore, $X^* \subseteq X \subseteq \R^n$ so $X^*$ must 
+have a dimension of at most that of $\R^n$, which is $n$. Thus $X^*$ is a 
+polytope of at least $0$ dimension and at most $n$ dimension. \\
+\end{proof}
+
+Using these properies, we can construct a more efficient, $2$ part, algorithm. \\
+
+\section{Maximal Inclusion Algorithm}
+In this section, we develop an algorithm that will find an IP-optimum, 
+$\mathbf{z}^*$, in the set of LP-optima, $X^*$, given one exists. In order to 
+develop this algorithm, we must first recall the Intermediate Value Theorem (IVT 
+for short). \\
+\begin{thm}[Intermediate Value Theorem]
+Let $I = [a,b] \subseteq \R$ be a closed, sub-interval of the real numbers and 
+let $f: I \to \R$ be a continuous function across that interval. Then, for every 
+$y \in f(I) = [\min(f(a),f(b)),\max(f(a),f(b))]$, there must exist some $x \in 
+I,$ such that $f(x) = y$. \\
+\end{thm}
+Suppose we have solved our linear programming problem and have found $X^*$ and 
+$\hat{X}$ respectively. Our algorithm to find $\mathbf{z}^*$ is built around 
+"slicing off" the outermost edges of our polytope, $X^*$, in a cubic fashion.
+We must perform one set of "cuts" for each dimension of our decision variable. \\ \hfill \break
+In more formal terms, we wish to find the largest interval, $[a_i,b_i],$ such 
+that $a_i,b_i \in \Z, a_i \leq b_i$ and the half spaces $v_i = a_i, v_i = b_i$ 
+both intersect $X^*$. For each individual set of "cuts", this process yields 
+a new $X^*,\hat{X}$ which we will call $X',\hat{X}'$ respectively. Furthermore, 
+after a "cut" along the $v_i$-axis, $X'$ is guaranteed to have integral edges 
+along the $v_i$-axis at exactly $v_i=a_i$ and $v_i=b_i$. Most importantly, $X'$ 
+is guaranteed to remain convex polytope due to the convexity and polytopicity 
+of $X'$ and the definition of this process as applying additional half space 
+intersections. \\ \hfill \break
+Before defining an algorithm about this process, we must more rigorously define 
+what we "cutting" means. In actuality, how one might perform this "cutting" 
+operation is by doing the following. First, project $X^*$ down onto the 
+$v_i$-axis this "removes" any data external to our current integral interval 
+conclusion from consideration. This is written as follows. \\
+\[S_i = \vproj_{E_i}(S)\] \\
+for some convex polytope, $S$, (which will use for both $X^*$ and $X'$) where \\
+\[E_i = \vspan(\{\mathbf{e}_i\})\] \\
+which can also be represented as the matrix in $M_n(\R)$ of all $0$s except for 
+at index $(i,i)$ where it is $1$. As such, we can now solve \\
+\[[a_i,b_i] = \argmax_{[a,b] \subseteq S_i : a,b \in \Z, }|b-a|\] \\
+to find the maximal integral inclusion of $S$ along the $v_i$-axis. In other 
+words, we have found the subset of $S$ of the smallest measure that contains the 
+largest number of integers. This can be done by taking \\ 
+\[[a_i,b_i] = [\lceil c_i \rceil,\lfloor d_i \rfloor]\] \\
+where \\
+\[[c_i,d_i] = \argmax_{[a,b] \subseteq S_i}|b-a|\] \\
+We can now project this interval up into our original 
+space such that we can perform an intersection by finding the half spaces 
+corresponding to the bounds of this interval. We call these half spaces 
+$\mathcal{A}_i$ and $\mathcal{B}_i$ and we define them as follows. \\
+\[\mathcal{A}_i = \{\mathbf{v} \in \R^n : v_i \geq a_i\}\] \\
+and \\
+\[\mathcal{B}_i = \{\mathbf{v} \in \R^n : v_i \leq b_i\}\] \\
+or equivalently, using matrix notation, \\
+\[\mathcal{A}_i = \{E_i\mathbf{v} \geq a_i\mathbf{e}_i : \mathbf{v} \in \R^n\}\] \\
+and \\
+\[\mathcal{B}_i = \{E_i\mathbf{v} \leq b_i\mathbf{e}_i : \mathbf{v} \in \R^n\}\] \\
+Now that we have half spaces of the proper dimension, we can perform our "slice" 
+by performing a set intersection. Once again, this is written as follows. \\
+\[S' = S \cap \mathcal{A}_i \cap \mathcal{B}_i\] \\
+Also, it is reasonable to assume, given $A_i,B_i,$ and $\hat{S}$, that $\hat{S}'$ 
+is not difficult to find and, therefore, we take the function, \\
+\[V: \R^n_{\aleph_0} \times \Half[\R^n] \to \R^n_{\aleph_0}\] \\
+such that \\
+\[V(V(\hat{S},\mathcal{A}_i),\mathcal{B}_i) \mapsto \hat{S}' \mapsfrom V(V(
+\hat{S},\mathcal{B}_i),\mathcal{A}_i)\] \\
+where $\R^n_{\aleph_0}$ is the set of finite subsets of $\R^n$ and $\Half[\R^n]$ 
+is the set of half spaces of $\R^n$, without further explanation. Without loss of 
+generality, we will use the following truncation in the construction of our 
+algorithm. \\
+\[V(\hat{S},\mathcal{A}_i,\mathcal{B}_i) = V(V(\hat{S},\mathcal{A}_i),\mathcal{B}_i)\] \\ 
+Similarly, we take the function \\
+\[\Half: M_{n}(\R) \times \R^n \times \1 \to \Half[\R^n]\] \\
+to be defined as \\
+\[\Half(A,\mathbf{b},t) = \begin{cases}
+  $t = 0$ & \{A\mathbf{v} \geq \mathbf{b} : \mathbf{v} \in \R^n\} \\
+  $t = 1$ & \{A\mathbf{v} \leq \mathbf{b} : \mathbf{v} \in \R^n\} \\
+\end{cases}\] \\
+\hfill \break
+Notice that, as long as the solution to the maximal integral inclusion, $[a_i,
+b_i]$, exists, $[a_i,b_i]$ is guaranteed to contain $b_i - a_i + 1$ integers by 
+the Intermediate Value Theorem. Thus, it is only when a solution to the maximal 
+integral inclusion fails to exist that we can determine, with certainty, that 
+$S_i$ does not contain an integer solution. This is useful because, when applied 
+to $X^*_i$, such an interval failing to exist shows, for every $\mathbf{x}^* \in 
+X^*$, \\
+\[x^*_i \not \in \Z\] \\
+Which, consequently, shows that $X^*$ contains no integer solutions. 
+contrapositively, this means if we can find maximal integral inclusions of $X^*$ 
+for every $v_i$-axis in $\R^n$, then we can determine that $X^*$ must contain at 
+least $1$ integer solution and, therefore, contains all IP-correspondent 
+solutions. \\ \hfill \break
+By performing this process iteratively across every $v_i$-axis in $\R^n$, we 
+construct the following algorithm to find some $\mathbf{z}^* \in X^*$ given one 
+exists. \\
+\begin{enumerate}
+  \item[] $X' \gets X^*$ \\
+  \item[] $\hat{X}' \gets \hat{X}$ \\
+  \item[] \verb|for|$(i \gets 1; i \leq n; i \gets i + 1)$\verb|{| \\
+  \begin{enumerate}
+    \item[] $X'_i \gets \vproj_{E_i}(X')$ \\
+    \item[] $c_i,d_i \gets \argmax_{[a,b] \subseteq X'_i}|b-a|$ \\
+    \item[] $a_i,b_i \gets \lceil c_i \rceil,\lfloor d_i \rfloor$ \\
+    \item[] $\mathcal{A}_i,\mathcal{B}_i = \Half(I,a_i\mathbf{e}_i,0),\Half(I,b_i\mathbf{e}_i,1)$ \\
+    \item[] $X' \gets X' \cap \mathcal{A}_i \cap \mathcal{B}_i$ \\
+    \item[] $\hat{X}' \gets V(\hat{X},\mathcal{A}_i,\mathcal{B}_i)$ \\
+  \end{enumerate}
+  \item[] \verb|}| \\
+  \item[] \verb|for| $(\mathbf{v} \in \hat{X}')$\verb|{| \\
+  \begin{enumerate}
+    \item[] \verb|if|$(\mathbf{v} \in \Z^n)$\verb|{| \\
+    \begin{enumerate}
+      \item[] \verb|return| $\mathbf{v}$ \\
+    \end{enumerate}
+    \item[] \verb|}| \\
+  \end{enumerate}
+  \item[] \verb|}| \\
+  \item[] \verb|return NULL| \\
+\end{enumerate}
+This algorithm works by first setting $X',\hat{X}'$ to $X^*,\hat{X}$ 
+respectively, then performing our aformentioned process on $X',\hat{X}'$, and 
+then updating $X',\hat{X}'$ to the results of that, for every $v_i$-axis in 
+$\R^n$. Assuming $Z^* \subseteq X^*$, this algorithm will produce $X',$ such that 
+$Z^* \subseteq X' \subseteq X^*$ and at least $1$ vertex, $\mathbf{\hat{x}}' \in 
+\hat{X}'$, such that $\mathbf{\hat{x}}' \in \hat{Z}$. \\
+
+\section{An Alternate View of LP}
+Before we construct the second part of our algorithm, we will first analyze a 
+different way to look at and solve linear programming problems. Suppose we have 
+been given a bounded, feasible, linear programming problem of the following form. \\
+\begin{center}\begin{tabular}{rccc}
+  maximize   & $\mathbf{c}^T\mathbf{x}$ &        &              \\
+  subject to & $A\mathbf{x}$            & $\leq$ & $\mathbf{b}$ \\
+             & $\mathbf{x}$             & $\geq$ & $\mathbf{0}$ \\
+\end{tabular}\end{center}
+
+\subsection{Affine Linear Spaces}
+Notice \\
+\[\{\mathbf{x} \in \R^n : \mathbf{c}^T\mathbf{x} = 0\}\] \\ 
+is a generalized form of a hyperplane of dimension $n-1$ in $\R^n$ (known as 
+vector form) and similarly \\
+\[\{\mathbf{x} \in \R^n : \mathbf{c}^T(\mathbf{x} - \mathbf{x}_0) = 0\}\] \\
+is a generalized form of an affine hyperplane of dimension $n-1$ in $\R^n$ 
+(again, known as vector form). Furthermore, \\
+\[\{t\mathbf{c} : t \in \R\}\] \\
+is a generalized form of the orthogonally complementary, linear subspace to both 
+of the above (once again, known as vector form). \\ 
+
+\subsection{Implicit Form}
+Now recall that we are trying to find the maximal solution for \\
+\[\mathbf{c}^T\mathbf{x}\] \\
+such that \\
+\[A\mathbf{x} \leq \mathbf{b}\] \\
+and \\
+\[\mathbf{x} \geq \mathbf{0}\] \\
+So far, we have approached solving this problem through explicit approaches: 
+choosing $\mathbf{x}$ values that yield higher and higher results until we have 
+hit a maximum. Now, instead, consider the following. The above problem is 
+equivalent to solving \\
+\[\max_{\zeta \in \R}\zeta\] \\
+such that \\
+\[\{\mathbf{x} \in \R^n : \mathbf{c}^T\mathbf{x} = \zeta, A\mathbf{x} \leq 
+\mathbf{b}, \mathbf{x} \geq \mathbf{0}\} \neq \emptyset\] \\
+This is the implicit form of our linear programming problem. \\
+
+\subsection{Implicit Forms and Affine Linearity}
+Now notice that for every $\zeta \in \R$, there exists a $\mathbf{x}_0 \in \R^n$ 
+such that \\
+\[\{\mathbf{x} \in \R^n : \mathbf{c}^T\mathbf{x} = \zeta\} = \{\mathbf{x} \in 
+\R^n : \mathbf{c}^T(\mathbf{x} - \mathbf{x}_0) = 0\}\] \\
+and vice versa. This is because \\
+\[\{\mathbf{x} \in \R : \mathbf{c}^T\mathbf{x} = \zeta\}\] \\
+is also a generalized form of an affine hyperplane of dimension $n-1$ in $\R^n$ 
+(known as standard form). Importantly, this shows for any choice of $\mathbf{x}_0 
+\in \R^n,$ every $\mathbf{x}$ that lies on the corresponding affine hyperplane 
+has the objective value. Because of this, we can adopt the following intuition 
+for solving the implicit form of our linear programming problem. \\
+
+\section{The Dating Game}
+
+\subsection{The Game}
+Suppose we have fixed some $\mathbf{b},\mathbf{c},\mathbf{x}_0 \in \R^n$ and some 
+$A \in M_n(\R)$. Now we are ready to set up our game. Suppose we have $2$ 
+players, Estella and Pip. We give each of them a set of points in $\R^n$. 
+Specfically, we give Pip \\
+\[S = \{\mathbf{x} \in \R^n : \mathbf{c}^T(\mathbf{x} - \mathbf{x}_0) = 0\}\] \\
+and Estella, \\
+\[T = \{\mathbf{x} \in \R^n : A\mathbf{x} \leq \mathbf{b}, \mathbf{x} \geq 
+\mathbf{0}, \mathbf{c}^T(\mathbf{x} - \mathbf{x}_0) \geq 0\}\] \\
+The game plays out as follows. Pip and Estella choose points, $\mathbf{s} \in S$ 
+and $\mathbf{t} \in T$ respectively. Estella is then wins points equal to \\
+\[||\mathbf{t} - \mathbf{s}||_2\] \\
+and Pip loses the same number of points. This game is blatantly unfair, but it is 
+also a $0$-sum game. Therefore, there exists an optimal strategy for both Pip and 
+Estella. These optimal strategies will help us solve our linear programming 
+problem. \\
+
+\subsection{Connection to LP}
+Notice, that Pip's plays are exactly the choices of decision variables for our 
+linear programming problem that yield a specific objective function value. 
+Choosing different values for $\zeta$ is equivalent to sliding the space of Pip's 
+plays along the line orthogonal to said space intersecting the origin. In our 
+linear programming problem, we wish to maximize this value, whilst remaining 
+within the bounded region. This is equivalent to minimizing the maximal distance 
+between Pip's play space and Estella's play space. In other words, solving our 
+linear programming problem is equivalent to perpendicularly shifting Pip's play 
+space such that our game becomes fair. We will achieve this my taking smaller and 
+smaller subsets of our feasible region that are guaranteed to contain the optimal 
+region. \\
+
+\subsection{Maximal Orthogonal Translation Bounding}
+For any given suboptimal value of $\zeta$, the optimal value, $\zeta^*$, with 
+optimal solution space, $X^*,$ is guaranteed to lie above our current solution 
+space, $S$, corresponding to the suboptimal object value, $\zeta$. As such, we 
+can update our bounded region by intersecting it with the boundary, $S$, to 
+restrict our solution space while preserving its containment of the optimal 
+solution space, which will result in a more fair game. We can perform this 
+boundary intersection procedure by translating the objective function along its 
+orthogonal complement, until reaching maximal inclusion in the bounded region (as 
+previously discussed), and taking the intersection of our current boundary with 
+this translation to be our updated boundary. Then translating the orthogonal 
+complement along the objective function, until reaching its maximal inclusion in 
+the updated bounded region. We repeat these two translational processes until 
+one translation fails to change our boundary, indicating that we have encountered 
+a steady state. At this point, the region of all maximal inclusions of the 
+orthogonal complement will be the prismatic polytope whose lower bounding face, 
+which we will call $X'$, is our current objective function solution space and the 
+upper bounding face is the optimal solution space, $X^*$. As such, performing one 
+final translation of our objective function along its orthogonal complement (but 
+this time minimizing the distance between the objective function and the boundary 
+of the feasible region) will yield the optimal solution space. \\
+\begin{conj}
+The above procedure is a valid and consistent method of solving linear 
+programming problems. \\
+\end{conj}
+Given that the above conjecture holds, we can now create an algorithm for finding 
+an IP-optimum, $\mathbf{z}^*$, when $X^*$ contains no integer solutions. \\
+
+\section{Minimal Exclusion Algorithm}
+In this section, we develop an algorithm that will find an IP-optimum, 
+$\mathbf{z}^*$, by minimizing the distance from some $\mathbf{z} \in Z$ to the 
+set of LP-optima, $X^*$, given $X^*$ contains no integer solutions. The 
+motivation of this algorithm is to use the $X',X^*$ found by the preceding 
+algorithm to bound the IP-optima space, $Z^*$. \\
+
+\subsection{Minimal Vertex Balls}
+Suppose we have $X^*,\hat{X}^*$ from the the optimal solution to our linear 
+programming problem. The minimal $n$-sphere whose boundary intersects some 
+$\mathbf{z} \in \Z^n$ centered at some $\mathbf{\hat{x}}^* \in \hat{X}^*$ has at 
+$2^{n-1}$ points on its boundary in $\Z^n$ that also lie within the feasible 
+region. We will call this $n-$sphere, $B(\mathbf{\hat{x}}^*,r^*)$, where $r^*$ is 
+the measure of this $n$-sphere's radius. By definition, there are no points in 
+the interior of $B(\mathbf{\hat{x}}^*,r^*)$ that are also in $\Z^n$. \\
+\begin{conj}
+  For every $\mathbf{\hat{x}}^* \in \hat{X}^*,$ the integer point(s), 
+  $\mathbf{\bar{z}}$, that lie on the boundary of $B(\mathbf{\hat{x}}^*,r^*)$ 
+  occur at the same points relative to $\mathbf{\hat{x}}^*$ regardless of the 
+  value of $\mathbf{\hat{x}}^*$. \\
+\end{conj}
+Given that the above conjecture holds, each polytope, $\bar{Z},$ defined by the 
+vertices of $\mathbf{\bar{z}}$ relative to each $\mathbf{\hat{x}}^* \in 
+\hat{X}^*$ has the same objective value across the entire polytope. This is 
+because each polytope, $\bar{Z}$, is orthogonal to the objective function fixed 
+to a given objective value. \\
+
+\subsection{Minimally Orthogonal Polytopes}
+Given the validity of the previous section, we know the polytope, $\bar{Z}$, that 
+is closest to $X^*$ is the one defined by the vector difference, 
+$\mathbf{\bar{z}} - \mathbf{\hat{x}}^*,$ that is the least orthogonal to (or 
+rather closest to its projection onto) $X^*$. We only need to check the 
+difference of $\mathbf{\bar{z}} - \mathbf{\hat{x}}^*$ for one $\mathbf{\hat{x}}^* 
+\in \hat{X}^*$ for each $\mathbf{\bar{z}} \in \bar{Z}$ because of the 
+aforementioned equivalence of $\mathbf{\bar{z}}$ relative to each 
+$\mathbf{\hat{x}}^*$. Thus we only have to check the orthogonality of 
+$\mathbf{\bar{z}} - \mathbf{\hat{x}}^*$ for the $2^{n-1}$ values of 
+$\mathbf{\bar{z}} \in \bar{Z}$ and for a single value of $\mathbf{\hat{x}}^* \in 
+\hat{X}^*$. Then once we have the minimizing value of $\mathbf{\bar{z}}$, all  we 
+must do is find one of the $\mathbf{\hat{x}}^* \in \hat{X}^*$ such that the point 
+$\mathbf{\bar{z}}$ relative to $\mathbf{\hat{x}}^*$ lies with in the feasible 
+region. Thus, we have to check, at worst, $2^{n-1} + n$ values. However, I 
+suspect that this can be improved. \\
+
+\subsection{Prismatic Polytopic Bounding}
+Unlike previous sections, this section is purely conjecture from playing around 
+with the previous principles, processes and properties. \\
+\begin{conj}
+  Of the $2^{n-1}$ aforementioned polytopes, $\bar{Z},$ between $1$ and $n$ of 
+  them intersect the the previously discussed prismatic polytope defined by the 
+  faces $X'$ and $X^*$. \\
+\end{conj}
+If the above conjecture holds, we only need to check the orthogonality of 
+$\mathbf{\bar{z}} - \mathbf{\hat{x}}^*$ for at most $n$ values of 
+$\mathbf{\bar{z}} \in \bar{Z}$ for one $\mathbf{\hat{x}}^* \in \hat{X}^*$ instead 
+of the otherwise $2^{n-1}$ values of $\mathbf{\bar{z}}$ which lowers the number 
+of values we need to check to, at worst, $2n$ values.
+
+\section{The Final Algorithm}
+Given that all of the previously discussed mathematics holds, our final 
+algorithm for solving integer programming problems using LP goes as follows. 
+First, solve the LP-correspondent, yielding $X^*$ and $\hat{X}^*$. Perform the 
+algorithm outlined in section III on $X^*,\hat{X}^*$. If this yields a solution, 
+we are done, otherwise, perform the algorithm outlined in section VI on $X^*,
+\hat{X}^*$, which will yield a solution because the previous step did not. \\
+
+\subsection{Temporal Complexity}
+The motivation for the above processes is that, once again given that all of the 
+unproven conjectures hold, every outlined algorithm is a deterministic, 
+polynomial time, algorithm. As such, our final algorithm is the composition of 
+deterministic, polynomial time, algorithms and is therefore a deterministic 
+polynomial time algorithm. This would mean that IP is polynomial time reducible 
+to LP and therefore IP would be a subset of P. IP is a subset of NP-Complete and 
+as such, showing that IP is a subset of P would prove P = NP. \\
+
+\section{Moving Forward}
+The next steps for this approach to IP is to prove or disprove the unproven 
+conjectures contained within this paper and continue research from there 
+depending on the conslusion regarding said unproven conjectures. \\
+
+\end{document}

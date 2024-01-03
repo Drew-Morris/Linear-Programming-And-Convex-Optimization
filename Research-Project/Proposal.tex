@@ -1,0 +1,183 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{cancel}
+\usepackage{caption}
+\usepackage{cite}
+\usepackage{esdiff}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage[hidelinks]{hyperref}
+\usepackage{mathrsfs}
+\usepackage{pgfplots}
+\usepackage{stmaryrd}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{xcolor,colortbl}
+\usepackage{tabularx}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\B}{\ensuremath \mathbb{B}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\renewcommand*{\arraystretch}{1.5}
+
+\title{CS-412 Research Proposal}
+\author{Drew Morris}
+\date{October 31st, 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Context}
+All integer programming problems can be written in the following form. \\
+\begin{center}\begin{tabular}{ccccc}
+  maximize   & $\mathbf{c}^T\mathbf{x}$ &        &              \\
+  subject to & $A\mathbf{x}$            & $\leq$ & $\mathbf{b}$ \\
+\end{tabular}\end{center}
+where $A \in M_{m \times n}(\R)$, $\mathbf{b} \in \R^m$, $\mathbf{c} \in \R^n$, 
+and $\mathbf{x} \in \N_0^n$ where $m,n \in \N_0$. Notice by only modifying the 
+domain of the decision variable to $\mathbf{x} \in \F_{\geq 0}^n$, we now have 
+the general form for every linear programming problem. Furthermore, modifying the 
+domain of the decision variable to $\mathbf{x} \in \B_2^n$ yields the general 
+form for every binary knapsack problem. Given this, I have sufficient reason to 
+believe that every integer programming problem can be reduced to a system of a 
+linear programming problem and a binary knapsack problem. \\
+
+\section{Linear-Binary Reduction}
+Let $\mathbf{x}^* \in \R^n$ be an optimal solution to the following linear  
+programming problem. \\
+\begin{center}\begin{tabular}{ccccc}
+  maximize   & $\mathbf{c}^T\mathbf{x}$ &        &              \\
+  subject to & $A\mathbf{x}$            & $\leq$ & $\mathbf{b}$ \\
+\end{tabular}\end{center}
+Notice $\mathbf{x}^* = \mathbf{x}_q + \mathbf{x}_r$ where $\mathbf{x}_q \in 
+\N_0^n$ and $\mathbf{x}_r \in [0,1)^n$. Consequently, $\mathbf{x}_q$ is a 
+feasible solution to the corresponding integer programming problem. We now 
+construct the following binary knapsack problem. \\
+\begin{center}\begin{tabular}{cccc}
+  maximize   & $\mathbf{c}^T\mathbf{x}$ &        & \\
+  subject to & $A\mathbf{x}$            & $\leq$ & $\mathbf{b} - A\mathbf{x}_q$ \\
+\end{tabular}\end{center}
+Notice $\mathbf{x}_r$ is an optimal solution to the above problem's linear 
+counterpart. Let $\mathbf{x}_b$ be an optimal solution to this binary knapsack 
+problem. Equivalently, $\mathbf{x}_b$ is an optimal solution the above's integer 
+programming counterpart. Consequently, $\mathbf{x}_q + \mathbf{x}_b$ is a 
+feasible solution the integer programming counterpart to our original linear 
+programming problem. We will call this process the linear-binary reduction. \\
+
+\section{Goals}
+It is yet to be proven that the solution, $\mathbf{x}_q + \mathbf{x}_b$ acquired 
+from linear-binary reduction is an optimal one. As such, to do so is a goal of 
+this research project. Furthermore, it could stand to reason that $\mathbf{x}_r$ 
+could be used to more efficiently solve for $\mathbf{x}_b$ in many, if not all, 
+cases. To find such a method is also a goal of this research project. Finally, 
+given the second goal can be met, we wish to find a non-trivial set of integer 
+programming problems such that $\mathbf{x}_r$ can be used to solve $\mathbf{x}_b$ 
+in polynomial time. \\
+
+\section{Motivation}
+If the above goals are met, then the result will be a process that can be used 
+to efficiently solve integer programming problems. Furthermore, it will show that 
+a non-trivial subset of integer programming problems (which are NP-hard) are in 
+P. It is important to note this does not show P $=$ NP as it does not reduce all 
+integer programming problems to P nor could it because this process is dependent 
+on binary knapsacks (which are also NP-hard). It would; however, also show that a 
+non-trivial subset of binary knapsack problems are reducible to P. I have 
+sufficient motivation to believe that there also exists a non-trivial subset of 
+integer programming problems for which this process does not reduce to $P$. By 
+the same reasoning, this does not show P $\neq$ NP. The end goal efficiently 
+solves integer programming problems, and in some non-trivial cases, solves them 
+in polynomial time, which I hope will grant further insight into the P-NP 
+problem and motivate further research into its solution or lack thereof. \\ \pagebreak
+
+\section{Ideas}
+What does the Fourier Transform of such problems looks like? What does the 
+row-wise convolution of the primal, $A\mathbf{x} = \mathbf{b}$? What about the 
+column-wise convolution? What about the same operations on the dual,
+$A^T\mathbf{y} = \mathbf{c}$. \\
+
+\section{Notation}
+The following are clarifications regarding notation. \\
+\begin{center}\begin{tabular}{rcl}
+  $\N_0$               & $:=$ & the natural numbers including $0$               \\
+  $\B_n$               & $:=$ & $\N_0 \cap [0,n)$ where $n \in \N$              \\
+  $\F$                 & $:=$ & a field                                         \\
+  $M_{m \times n}(\F)$ & $:=$ & the space of $m$ by $n$ matrices over $\F$      \\
+  $S[x]$               & $:=$ & the set of polynomials with coefficients in $S$ \\
+  $S[x;T]$             & $:=$ & $S[x]$ with exponents in $T$                    \\
+  $S[x;n]$             & $:=$ & $S[x;\B_{n+1}]$ where $n \in \N_0$              \\
+\end{tabular}\end{center}
+
+\end{document}

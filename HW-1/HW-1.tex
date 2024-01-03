@@ -1,0 +1,278 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathcal{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+
+\graphicspath{ {~/School/CS-312/Projects/Project-1-Primality/Screenshots/} }
+
+\title{HW 1}
+\author{Drew Morris}
+\date{September 9th 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}
+Let $S$ be the set of $2x2$ matrices.
+\begin{enumerate}
+  \item Verify that $S$ is a vector space over $\R$ under matrix addition and 
+    scalar multiplication.
+  \item What is the dimension of this $S$? Justify your answer with a basis.
+\end{enumerate}
+\end{prob}
+\begin{proof}
+  Let $\mathbf{A},\mathbf{B},\mathbf{C} \in S$. Then $\mathbf{A} = 
+  \begin{bmatrix} 
+    a_{(0,0)} & a_{(0,1)} \\
+    a_{(1,0)} & a_{(1,1)} \\
+  \end{bmatrix}$ where $a_{(0,0)}, a_{(0,1)}, a_{(1,0)}, a_{(1,1)} \in \R$ and similarly 
+  for $\mathbf{B}$ and $\mathbf{C}$. Additionally, let $k_0,k_1 \in \R$ and 
+  $\mathbf{O} = \begin{bmatrix}
+    0 & 0 \\
+    0 & 0 \\
+  \end{bmatrix}$. We will now prove $S$ has the 
+  properties of a vector space.
+  \begin{enumerate}
+    \item Additive Associativity: \[\mathbf{A} + (\mathbf{B} + \mathbf{C}) = 
+      \begin{bmatrix}
+        a_{(0,0)} & a_{(0,1)} \\
+        a_{(1,0)} & a_{(1,1)} \\
+      \end{bmatrix} + \begin{bmatrix}
+        b_{(0,0)} + c_{(0,0)} & b_{(0,1)} + c_{(0,1)} \\
+        b_{(1,0)} + c_{(1,0)} & b_{(1,1)} + c_{(1,1)} \\
+        \end{bmatrix} = \] \[\begin{bmatrix}
+        a_{(0,0)} + b_{(0,0)} + c_{(0,0)} & a_{(0,1)} + b_{(0,1)} + c_{(0,1)} \\
+        a_{(1,0)} + b_{(1,0)} + c_{(1,0)} & a_{(1,1)} + b_{(1,1)} + c_{(1,1)} \\
+        \end{bmatrix} = \] \[\begin{bmatrix}
+        a_{(0,0)} + b_{(0,0)} & a_{(0,1)} + b_{(0,1)} \\
+        a_{(1,0)} + b_{(1,0)} & a_{(1,1)} + b_{(1,1)} \\
+      \end{bmatrix} + \begin{bmatrix}
+        c_{(0,0)} & c_{(0,1)} \\
+        c_{(1,0)} & c_{(1,1)} \\
+      \end{bmatrix} = (\mathbf{A} + \mathbf{B}) + \mathbf{C}\] \\
+    \item Additive Commutativity: \[\mathbf{A} + \mathbf{B} = 
+        \begin{bmatrix}
+          a_{(0,0)} + b_{(0,0)} & a_{(0,1)} + b_{(0,1)} \\
+          a_{(1,0)} + b_{(1,0)} & a_{(1,1)} + b_{(1,1)} \\
+        \end{bmatrix} = \begin{bmatrix}
+          b_{(0,0)} + a_{(0,0)} & b_{(0,1)} + a_{(0,1)} \\
+          b_{(1,0)} + a_{(1,0)} & b_{(1,1)} + a_{(1,1)} \\
+        \end{bmatrix} = \mathbf{B} + \mathbf{A}\] \\
+    \item Additive Identity: \[\mathbf{A} + \mathbf{O} = 
+      \begin{bmatrix}
+        a_{(0,0)} + 0 & a_{(0,1)} + 0 \\
+        a_{(1,0)} + 0 & a_{(1,1)} + 0 \\
+      \end{bmatrix} = \begin{bmatrix}
+        a_{(0,0)} & a_{(0,1)} \\
+        a_{(1,0)} & a_{(1,1)} \\
+      \end{bmatrix} = \mathbf{A}\] \\
+    \item Additive Inverse: \[\mathbf{A} + (-A) = 
+      \begin{bmatrix}
+        a_{(0,0)} - a_{(0,0)} & a_{(0,1)} - a_{(0,1)} \\
+        a_{(1,0)} - a_{(1,0)} & a_{(1,1)} - a_{(1,1)} \\
+      \end{bmatrix} = \begin{bmatrix}
+        0 & 0 \\
+        0 & 0 \\
+      \end{bmatrix} = \mathbf{O}\] \\
+    \item Scalar-Multiplicative Associativity: \[k_0(k_1\mathbf{A}) = 
+      k_0\begin{bmatrix}
+        k_1a_{(0,0)} & k_1a_{(0,1)} \\
+        k_1a_{(1,0)} & k_1a_{(1,1)} \\
+      \end{bmatrix} = \begin{bmatrix}
+        (k_0k_1)a_{(0,0)} & (k_0k_1)a_{(0,1)} \\
+        (k_0k_1)a_{(1,0)} & (k_0k_1)a_{(1,1)} \\
+      \end{bmatrix} = (k_0k_1)\mathbf{A}\] \\
+    \item Scalar-Multiplicative Identity: \[1\mathbf{A} = 
+      \begin{bmatrix}
+        1a_{(0,0)} & 1a_{(0,1)} \\
+        1a_{(1,0)} & 1a_{(1,1)} \\
+      \end{bmatrix} = \begin{bmatrix}
+        a_{(0,0)} & a_{(0,1)} \\
+        a_{(1,0)} & a_{(1,1)} \\
+      \end{bmatrix} = \mathbf{A}\] \\
+    \item First Law of Scalar-Multiplicative Distributivity: \[k_0(\mathbf{A} + 
+        \mathbf{B}) = 
+      \begin{bmatrix}
+        k_0(a_{(0,0)} + b_{(0,0)}) & k_0(a_{(0,1)} + b_{(0,1)}) \\
+        k_0(a_{(1,0)} + b_{(1,0)}) & k_0(a_{(1,1)} + b_{(1,1)}) \\
+      \end{bmatrix} = \] \[\begin{bmatrix}
+        k_0a_{(0,0)} + k_0b_{(0,0)} & k_0a_{(0,1)} + k_0b_{(0,1)} \\
+        k_0a_{(1,0)} + k_0b_{(1,0)} & k_0a_{(1,1)} + k_0b_{(1,1)} \\
+      \end{bmatrix} = k_0\mathbf{A} + k_0\mathbf{B}\] \\
+    \item Second Law of Scalar-Multiplicative Distributivity: \[k_0\mathbf{A} + 
+        k_1\mathbf{A} = 
+      \begin{bmatrix}
+        k_0a_{(0,0)} + k_1a_{(0,0)} & k_0a_{(0,1)} + k_1a_{(0,1)} \\
+        k_0a_{(1,0)} + k_1a_{(1,0)} & k_0a_{(1,1)} + k_1a_{(1,1)} \\
+      \end{bmatrix} = \] \[\begin{bmatrix}
+        (k_0 + k_1)a_{(0,0)} & (k_0 + k_1)a_{(0,1)} \\
+        (k_0 + k_1)a_{(1,0)} & (k_0 + k_1)a_{(1,1)} \\
+      \end{bmatrix} = (k_0 + k_1)\mathbf{A}\] \\
+  \end{enumerate}
+\end{proof}
+$\dim(S) = 4$. For justification, $S_{\mathscr{B}} = \bigg\{\begin{bmatrix}
+  1 & 0 \\
+  0 & 0 \\
+\end{bmatrix}, \begin{bmatrix}
+  0 & 1 \\
+  0 & 0 \\
+\end{bmatrix}, \begin{bmatrix}
+  0 & 0 \\
+  1 & 0 \\
+\end{bmatrix}, \begin{bmatrix}
+  0 & 0 \\
+  0 & 1 \\
+\end{bmatrix}\bigg\}$ is a basis of $S$.
+\begin{proof}
+  We will prove $S_{\mathscr{B}}$ is a basis of $S$. Let $\mathbf{A} \in S.$
+  \[\mathbf{A} = 
+    a_{(0,0)}\begin{bmatrix}
+      1 & 0 \\
+      0 & 0 \\
+    \end{bmatrix} + a_{(0,1)}\begin{bmatrix}
+      0 & 1 \\
+      0 & 0 \\
+    \end{bmatrix} + a_{(1,0)}\begin{bmatrix}
+      0 & 0 \\
+      1 & 0 \\
+    \end{bmatrix} + a_{(1,1)}\begin{bmatrix}
+      0 & 0 \\
+      0 & 1 \\
+    \end{bmatrix}\] \\
+\end{proof}
+
+\begin{prob}
+Show that no bounded subset of $\R^n$ is a non-trivial subspace.
+\end{prob}
+\begin{proof}
+  Let $S \subseteq \R^n$ such that $S$ is bounded. Then, for every neighborhood 
+  about $\mathbf{0}, E,$ there exists $k_0 \in \R_{>0},$ such that for every $k \in 
+  \R_{\geq |k_0|}, S \subseteq kE$. If $S = \emptyset$ then $\mathbf{0} \not \in 
+  S$ so it would not be a subset thus we assume $S$ is non-empty moving forward. 
+  By way of contradiction, suppose $S$ is a non-trivial subspace of $\R^n$. Then 
+  for every $\mathbf{v} \in S$ and every $c \in \R, c\mathbf{v} \in S$ and there 
+  exists $\mathbf{v} \in S$ such that $\mathbf{v} \neq \mathbf{0}$. Let $E$ be a 
+  neighborhood about $\mathbf{0}$ and $k_0 \in \R$ such that for every $k > 
+  |k_0|, S \subseteq kE$. Then $c\mathbf{v} \in kE$. Without loss of generality, 
+  we may restrict $E$ to being an $n-$sphere about $\mathbf{0}$ with a radius of 
+  $k_0$ i.e. $E = \{\mathbf{v} \in \R^n : |\mathbf{v}|_2 \leq k_0\}$. Suppose 
+  $\mathbf{v} \in S$ and $\mathbf{v} \neq \mathbf{0}$. Then for any $c \in \R,$ 
+  $c\mathbf{v} \in k_0E$. Therefore, $\forall c \in \R, k_0 > c$. $\R$ is an 
+  ordered field and is therefore unbounded; however, $k_0$ is a bound on $\R$. 
+  This is a contradiction.
+\end{proof}
+
+\begin{prob}
+  Consider the vector space of real-valued functions defined on $[0,1].$
+  \begin{enumerate}
+    \item Show that the set of upto 3rd-order polynomials, $P_{3[0,1]},$ is a 
+      subspace. What is the dimension of $P_{3[0,1]}$?
+    \item Show $F = \{\mathbf{f_0} = f_0(t) = 1, \mathbf{f_1} = f_1(t) = t, 
+      \mathbf{f_2} = f_2(t) = t^2, \mathbf{f_3} = f_3(t) = t^3\}$ is a 
+      basis of $P_{3[0,1]}$.
+  \end{enumerate}
+\end{prob}
+\begin{proof}
+  The zero function, $\mathbf{0},$ is a zero-degree polynomial so $\mathbf{0} \in 
+  F$. Let $\mathbf{g},\mathbf{h} \in P_{3[0,1]}$. Then $\mathbf{g} = g(t) = g_0 + 
+  g_1t + g_2t^2 + g_3t^3$ for some $g_0,g_1,g_2,g_3 \in \R$ and similarly with 
+  $\mathbf{h}$. $\mathbf{g} + \mathbf{h} = (g_0 + h_0) + (g_1t + h_1t) + 
+  (g_2t^2 + h_2t^2) + (g_3t^3 + h_3t_3) = (g_0 + h_0) + (g_1 + h_1)t + 
+  (g_2 + h_2)t^2 + (g_3 + h_3)t^3 \in P_{3[0,1]}$. Let $c \in \R$. $c\mathbf{g} = 
+  (cg_0) + (cg_1)t + (cg_2)t^2 + (cg_3)t^3 \in P_{3[0,1]}$.
+\end{proof}
+
+\begin{prob}
+Formulate the problem in exercise 1.2 as a linear programming problem.
+\end{prob}
+Let $Y,B,M$ be the classes described in the problem and let a subscript of 
+$0,1,2$ represent Ithica-Newark, Newark-Boston, and Ithaca-Boston respectively. 
+The problem becomes the following. \\
+Maximize
+\[(300Y_0 + 220B_0 + 100M_0) + (160Y_1 + 130B_1 + 80M_1) + (360Y_2 + 280B_2 + 140M_2)\]
+subject to
+\[Y_0 \leq 4, B_0 \leq 8, M_0 \leq 22\]
+\[Y_1 \leq 8, B_1 \leq 13, M_1 \leq 20\]
+\[Y_2 \leq 3, B_2 \leq 10, M_2 \leq 18\]
+\[(Y_0 + B_0 + M_0) + (Y_2 + B_2 + M_2) \leq 30\]
+\[(Y_1 + B_1 + M_1) + (Y_2 + B_2 + M_2) \leq 30\]
+
+\begin{prob}
+Formulate the problem in exercise 1.3 as a linear programming problem.
+\end{prob}
+
+Maximize
+\[\sum_{j=1}^{n}p_jx_j\]
+subject to
+\[\sum_{j=1}^{n}q_jx_j \leq \beta\]
+\[\sum_{j=1}^{n}p_j = 1\]
+\[\sum_{j=1}^{n}q_j = 1\]
+\[\forall n \in \N \cap [1,n], x_j,p_j,q_j \in [0,1]\]
+
+\end{document}

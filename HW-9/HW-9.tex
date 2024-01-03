@@ -1,0 +1,308 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{pgfplots}
+\usepackage{esdiff}
+\usepackage{tabularx}
+\usepackage{array}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisbcbcym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\DeclareMathOperator{\argmin}{argmin}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\renewcommand*{\arraystretch}{1.5}
+
+\title{HW-9}
+\author{Drew Morris}
+\date{November 7th, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}
+Consider the set of resource allocation games of $2$ agents. Do the following and 
+justify each answer. \\
+\begin{enumerate}
+  \item Find the price of anarchy for all such games. \\
+  \item Use your solution and a Venn Diagram to fill out the values of $v_S$ for 
+    all $S$. \\
+  \item Determine whether or not $a^{eq} = \{a_1^{eq},a_2^{eq}\}$ is an equillibrium. \\
+  \item Determine whether or not $a^{opt}\{a_1^{opt},a_2^{opt}\}$ is optimal. \\
+  \item Determine the value of the price of anarchy. \\
+\end{enumerate}
+\end{prob}
+\begin{enumerate}
+  \item Solving the linear programming problem from class yields a price of 
+    anarchy of $1$. \\
+  \item Below is the requested diagram. \\
+    \begin{tikzpicture}
+      \node[style=draw,shape=ellipse,minimum height=10cm,minimum width=9cm,label=right:{$a_1^{eq}$}]  at (2.5,0)  {};
+      \node[style=draw,shape=ellipse,minimum height=9cm,minimum width=10cm,label=above:{$a_2^{eq}$}]  at (0,2.5)  {};
+      \node[style=draw,shape=ellipse,minimum height=10cm,minimum width=9cm,label=left:{$a_1^{opt}$}]  at (-2.5,0) {};
+      \node[style=draw,shape=ellipse,minimum height=9cm,minimum width=10cm,label=below:{$a_2^{opt}$}] at (0,-2.5) {};
+      \node at (0,0) {$v_{1,2,3,4} = 1$};
+      \node at (-3,0) {$v_{2,3,4} = 0$};
+      \node at (3,0) {$v_{1,3,4} = 0$};
+      \node at (0,-3) {$v_{1,2,4} = 0$};
+      \node at (0,3) {$v_{1,2,3} = 0$};
+      \node at (2.8,2.8) {$v_{1,3} = 0$};
+      \node at (-2.8,-2.8) {$v_{2,4} = 0$};
+      \node at (2.8,-2.8) {$v_{1,4} = 0$};
+      \node at (-2.8,2.8) {$v_{2,3} = 0$};
+      \node at (5.5,0) {$v_1 = 0$};
+      \node at (0,5.5) {$v_3 = 0$};
+      \node at (-5.5,0) {$v_2 = 0$};
+      \node at (0,-5.5) {$v_4 = 0$};
+    \end{tikzpicture}
+  \item $a^{eq}$ is an equillibrium by assumption. \\
+  \item $a^{opt}$ is an optimal set of actions by assumption. \\
+  \item The value of the price of anarchy is $1$, meaning, in the case of two 
+    agents, the only equillibria are optima. \\
+\end{enumerate} \pagebreak
+
+\begin{prob}
+Find the $L^2$-regression for the data in Figure $12.8$. \\
+\end{prob}
+\begin{proof}
+Given the data, \\
+\[A = \begin{bmatrix}
+  0 & 1 \\
+  1 & 1 \\
+  2 & 1 \\
+  4 & 1 \\
+\end{bmatrix} \in M_{4 \times 2}(\R), \mathbf{y} = \begin{bmatrix}
+  0 \\
+  3 \\
+  1 \\
+  2 \\
+\end{bmatrix} \in \R^4\] \\ 
+we wish to find \\
+\[\mathbf{x} = \begin{bmatrix} 
+  a \\
+  b \\
+\end{bmatrix} \in \R^2,\mathbf{n} = \begin{bmatrix}
+  \varepsilon_1 \\
+  \varepsilon_2 \\
+  \varepsilon_3 \\
+  \varepsilon_4 \\
+\end{bmatrix} \in \R^4\] \\
+such that \\
+\[A\mathbf{x} = \mathbf{y} - \mathbf{n}\] \\
+and \\
+\[\mathbf{n} = \min_{\mathbf{k} \in \R^4}||\mathbf{k}||_2\] \\
+Notice \\
+\[A^H = \begin{bmatrix}
+  0 & 1 & 2 & 4 \\
+  1 & 1 & 1 & 1 \\
+\end{bmatrix}\] \\
+Therefore \\
+\[A^HA = \begin{bmatrix}
+  21 & 7 \\
+  7  & 4 \\
+\end{bmatrix}\] \\
+and \\
+\[A^H\mathbf{y} = \begin{bmatrix}
+  13 \\
+  6  \\
+\end{bmatrix}\] \\
+Thus, finding $\mathbf{x}$, is equivalent to solving \\
+\[A^HA\mathbf{x} = A^H\mathbf{y}\] \\
+i.e. \\
+\[\mathbf{x} = (A^HA)^{-1}A^H\mathbf{y}\] \\
+Notice \\
+\[(A^HA)^{-1} = \frac{1}{35}\begin{bmatrix}
+  4  & -7 \\
+  -7 & 21 \\
+\end{bmatrix}\] \\
+Thus \\
+\[\mathbf{x} = \frac{1}{35}\begin{bmatrix}
+  4  & -7 \\
+  -7 & 21 \\
+\end{bmatrix}\begin{bmatrix}
+  13 \\
+  6  \\
+\end{bmatrix} = \frac{1}{35}\begin{bmatrix}
+  10 \\
+  35 \\
+\end{bmatrix} = \frac{1}{7}\begin{bmatrix}
+  2 \\
+  7 \\
+\end{bmatrix} = \begin{bmatrix}
+  \frac{2}{7} \\
+  1 \\
+\end{bmatrix}\] \\
+Therefore, the $L^2$-regression is \\
+\[y = \frac{2}{7}x + 1\] \\
+\end{proof}
+
+\begin{prob}
+Find the $L^1$-regression for the data in Figure $12.8$. \\
+\end{prob}
+\begin{proof}
+Given the data, \\
+\[A = \begin{bmatrix}
+  0 & 1 \\
+  1 & 1 \\
+  2 & 1 \\
+  4 & 1 \\
+\end{bmatrix} \in M_{4 \times 2}(\R), \mathbf{y} = \begin{bmatrix}
+  0 \\
+  3 \\
+  1 \\
+  2 \\
+\end{bmatrix} \in \R^4\] \\ 
+we wish to find \\
+\[\mathbf{x} = \begin{bmatrix} 
+  a \\
+  b \\
+\end{bmatrix} \in \R^2,\mathbf{n} = \begin{bmatrix}
+  \varepsilon_1 \\
+  \varepsilon_2 \\
+  \varepsilon_3 \\
+  \varepsilon_4 \\
+\end{bmatrix} \in \R^4\] \\
+such that \\
+\[A\mathbf{x} = \mathbf{y} - \mathbf{n}\] \\
+and \\
+\[\mathbf{n} = \min_{\mathbf{k} \in \R^4}||\mathbf{k}||_1\] \\
+Notice \\
+\[\mathbf{n} = \mathbf{y} - A\mathbf{x} = \begin{bmatrix}
+0 \\
+3 \\
+1 \\
+2 \\
+\end{bmatrix} - \begin{bmatrix}
+0a + b \\
+a + b \\
+2a + b \\
+4a + b \\
+\end{bmatrix} = \begin{bmatrix}
+-b \\
+3 - a - b \\
+1 - 2a - b \\
+2 - 4a - b \\
+\end{bmatrix}\] \\
+Thus we wish to solve \\
+\[\mathbf{x} = \begin{bmatrix}
+a \\
+b \\
+\end{bmatrix} \text{ such that } \min_{a,b \in \R} |-b| + |3-a-b| + |1-2a-b| + 
+|2-4a-b|\] \\
+Which yields \\
+\[\mathbf{x} = \begin{bmatrix}
+  \frac{1}{2} \\
+  0 \\
+\end{bmatrix}\] \\
+\end{proof}
+
+\begin{prob}
+Given a sorted set, $(b_i)_{i=1}^{m} \subseteq \R$, show the midrange of 
+$(b_i)_{i=1}^{m}$, \\
+\[\tilde x = \frac{b_1 + b_m}{2}\] \\
+satisfies \\
+\[\tilde x = \argmin_{x \in \R}\max_{i \in \N \cap [1,m]}|x - b_i|\] \\
+\end{prob}
+\begin{proof}
+Since $(b_i)_{i=1}^{m}$ is sorted, we know for any given $x \in \R, (b_i - x)_{i=1}^{m}$ 
+is sorted. Thus $\tilde x$ needs to be the median of the range spanned by $(b_i)_{i=1}^{m}$ 
+i.e. $\tilde x$ is the median of $[b_1,b_m]$. Therefore \\
+\[\tilde x = \frac{b_1 + b_m}{2}\] \\
+\end{proof}
+
+\begin{prob}
+Given a sorted set, $(b_i)_{i=1}^{m} \subseteq \R^2$, show the midrange of 
+$(b_i)_{i=1}^{m}$, \\
+\[\bar x = \frac{1}{m}\sum_{i=1}^{m}b_i\] \\
+satisfies \\
+\[\bar x = \min_{x \in \R^2}\sum_{i=1}^{m}||x - b_i||_2^2\] \\
+\end{prob}
+\begin{proof}
+Due to the lack of time my reasoning is not as thorough as usual. We know that 
+$\bar x$ needs minimize its difference between the given points on both axes with 
+respect to Euclidean distance ($2$-norm). Thus we take the mean across the 
+$2$-norms distances of the difference between $x$ and the given points. This is 
+purely because we are using the $2$-norm distance. This corresponds to the 
+centroid formula given. \\
+\end{proof}
+
+\end{document}

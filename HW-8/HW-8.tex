@@ -1,0 +1,376 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{pgfplots}
+\usepackage{esdiff}
+\usepackage{tabularx}
+\usepackage{array}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisbcbcym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\renewcommand*{\arraystretch}{1.5}
+
+\title{HW-8}
+\author{Drew Morris}
+\date{October 24th, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}
+Is $\R^n$ a polyhedron? \\
+\end{prob}
+\begin{proof}
+Let $n \in \N_0$. To show $\R^n$ is a polyhedron. Then we must show there exists 
+a collection of halfspaces, $H = \{H_i : i \in I\}$, such that $|I| \in \N_0$ and 
+$\R^n = \bigcap H = \bigcap_{i \in I}H_i$. Take $H = \emptyset$ i.e. $I = \emptyset$. 
+Then \\
+\[\bigcap_{i \in I}H_i = \bigcap H = \bigcap \emptyset = U\] \\ 
+where $U$ is the universal set for the universe of our proof. Our proof is 
+regarding halfspaces of $\R^n$ and as such $U = \R^n$. $\emptyset$ is finite and 
+is (vacuously) a collection of halfspaces. Therefore $\R^n$ is a polyhedron. \\
+\end{proof}
+
+\begin{prob}
+Describe how one would need to modify the proof for Theorem $10.4$ to prove the 
+following. Let $P,\tilde{P}$ be disjoint polyhedra in $\R^n$. Then there exists 
+two disjoint generalized half-spaces, $H,\tilde{H}$, such that $P \subseteq H$ 
+and $\tilde{P} \subseteq \tilde{H}$. \\
+\end{prob}
+\begin{proof}
+The given statement and Theorem $10.4$ differ only in that the given statement 
+does not require non-emptiness. Thus, to achieve the given statement, add the 
+following case to the proof of Theorem $10.4$. Without loss of generality, suppose 
+$\tilde{P} = \emptyset$. Then $\tilde{H} = \emptyset$. Thus $\tilde{H}$ is 
+disjoint (vacuously) with every set. Thus take $H$ to be any half-space such that 
+$P \subseteq H$ which, in the case that $P \neq \emptyset$, there is at least one 
+of because $P$ is defined as a intersection of half-spaces. \\
+\end{proof}
+
+\begin{prob}
+Find a strictly complementary solution to the following linear programming 
+problem (primal and dual). \\
+\begin{center}\begin{tabular}{cccccc}
+  maximize   & $2x_1$ & $+$ & $x_2$  &        &     \\
+  subject to & $4x_1$ & $+$ & $2x_2$ & $\leq$ & $6$ \\
+             & $0x_1$ & $+$ & $x_2$  & $\leq$ & $1$ \\
+             & $2x_1$ & $+$ & $x_2$  & $\leq$ & $3$ \\
+             & $x_1$  & $,$ & $x_2$  & $\geq$ & $0$ \\
+\end{tabular} \quad \begin{tabular}{cccccccc}
+  minimize   & $6y_1$ & $+$ & $y_2$  & $+$ & $3y_3$ &        &     \\
+  subject to & $4y_1$ & $+$ & $0y_2$ & $+$ & $2y_3$ & $\geq$ & $2$ \\
+             & $2y_1$ & $+$ & $y_2$  & $+$ & $y_3$  & $\geq$ & $1$ \\
+             & $y_1$  & $,$ & $y_2$  & $,$ & $y_3$  & $\geq$ & $0$ \\
+\end{tabular}\end{center}
+\end{prob}
+\begin{proof}
+Consider the optimal primal solution and dual solutions respectively. \\
+\[(\mathbf{x}^*,\mathbf{w}^*,\zeta^*) = \Bigg(\begin{bmatrix}
+  \frac{5}{4} \\
+  \frac{1}{2} \\
+\end{bmatrix},\begin{bmatrix}
+  0           \\
+  \frac{1}{2} \\
+  0           \\
+\end{bmatrix},3\Bigg),(\mathbf{y}^*,\mathbf{z}^*,\xi^*) = \Bigg(\begin{bmatrix}
+  \frac{1}{4} \\
+  0           \\
+  \frac{1}{2} \\
+\end{bmatrix},\begin{bmatrix}
+  0 \\
+  0 \\
+\end{bmatrix},3\Bigg)\] \\
+Notice \\
+\[\mathbf{x} + \mathbf{z} = \begin{bmatrix}
+  \frac{5}{4} \\
+  \frac{1}{2} \\
+\end{bmatrix},\mathbf{y} + \mathbf{w} = \begin{bmatrix}
+  \frac{1}{4} \\
+  \frac{1}{2} \\
+  \frac{1}{2} \\
+\end{bmatrix}\] \\
+are both non-zero for all of their terms. \\
+\end{proof}
+
+\begin{prob}
+Complete the proof of Theorem $10.7$. \\
+\end{prob}
+\begin{proof}
+As mentioned we consider the following cases. \\
+Case $(t > 0)$: Suppose the optimal $t$ is strictly positive. Then, the $x^*_j$ 
+we are currently analyzing is non-null. Thus $x^*_j + z^*_j > 0$. \\
+Case $(t = 0)$: Suppose the optimal $t$ vanishes. Then, the $x^*_j$ we are 
+currently analyzing is null. Thus $z^*_j$ is non-null. Thus $x^*_j + z^*_j > 0$. \\
+We see the same logic holds for $\mathbf{y},\mathbf{w}$. Therefore, if an optimal 
+solution exists for a given linear programming problem then there must exist 
+optimal solutions to the primal and dual such that $x^*_j + z^*_j > 0$ and $y^*_i 
++ w^*_i > 0$ for all $i,j$. \\
+\end{proof}
+
+\begin{prob}
+Consider the following game. Players $A$ and $B$ each hide a nickel or a dime. If 
+the hidden coins match, player $A$ gets both, otherwise player $B$ gets both. 
+Answer the following. \\
+\begin{enumerate}
+  \item What are the optimal strategies? \\
+  \item Who has the advantage? \\
+  \item What are the optimal strategies for arbitrary coins, $a$ and $b$? \\
+\end{enumerate}
+\end{prob}
+\begin{enumerate}
+  \item \begin{proof}
+    This game can be represented with the following payout matrix where $A$ is the 
+    minimizer (rows) and $B$ is the maximizer (columns). \\
+    \[P = \begin{bmatrix}
+      -20  & 15 \\
+      15 & -10  \\
+    \end{bmatrix}\] \\ \pagebreak \\
+    By the symmetry of this matrix we know that both players have the same 
+    optimal strategy of $(\frac{5}{12},\frac{7}{12})$ with an optimal expected 
+    value of $\frac{5}{12}$. \\
+    \end{proof}
+  \item As shown above, the expected value of the optimal strategies is positive 
+    so player $A$ has the advantage. \\
+  \item In a generalized form, we can represent this game as the following matrix. \\
+    \[\begin{bmatrix}
+      -2a & a+b \\
+      a+b & -2b \\
+    \end{bmatrix}\] \\
+    Observe the derivation of the optimal strategies. \\
+    \[\begin{bmatrix}
+      p & 1-p \\
+    \end{bmatrix}\begin{bmatrix}
+      -2a & a+b \\
+      a+b & -2b \\
+    \end{bmatrix}\begin{bmatrix}
+      q   \\
+      1-q \\
+    \end{bmatrix} = -2b -4(a+b)pq + (a + 3b)p + (a + 3b)q\] \\
+    Thus the optimal strategy for both players is \\
+    \[\bigg(\frac{a+3b}{4(a+b)},1 - \frac{a+3b}{4(a+b)}\bigg)\] \\
+\end{enumerate}
+
+\begin{prob}
+  Let $A \in M_{m \times n}$ be a matrix with $\mathbf{r}_i$ as row vectors and 
+  $\mathbf{s}_j$ as column vectors for $i \in \N \cap [1,m]$ and $j \in \N \cap 
+  [1,n]$. Prove the following. \\
+  \begin{enumerate}
+    \item If $\mathbf{r}_i$ dominates $\mathbf{r}_k$ for some $i,k \in \N \cap 
+      [1,m]$ where $i \neq k$, then there exists an optimal strategy for the row 
+      player, $\mathbf{y}^*$, such that $y^*_i = 0$. \\
+    \item If $\mathbf{s}_j$ is dominated by $\mathbf{s}_l$ for some $j,l \in \N 
+      \cap [1,n]$ where $j \neq l$, then there exists an optimal strategy for the 
+      column player, $\mathbf{x}^*$, such that $x^*_j = 0$. \\
+  \end{enumerate}
+  Use the consequences of these proofs to reduce the following payout matrix. \\
+  \[\begin{bmatrix}
+    -6 & 2  & -4 & -7 & -5 \\
+    0  & 4  & -2 & -9 & -1 \\
+    -7 & -3 & -3 & -8 & -2 \\
+    2  & -3 & 6  & 0  & 3  \\
+  \end{bmatrix}\] \\
+\end{prob} \pagebreak
+\begin{enumerate}
+  \item \begin{proof}
+    Assume the given premise and supppose we have a feasible strategy for the row 
+    player, $\mathbf{y}$, such that $\mathbf{y}$ is optimal other than, possibly,
+    for $y_i,y_k$. Because $\mathbf{r}_i$ dominates $\mathbf{r}_k$, we know we 
+    can choose, at least equivalently optimal, $y_i' = y_i + \varepsilon,y_k' = 
+    y_k - \varepsilon$ where $\varepsilon \in [-y_i,y_k]$ with guaranteed 
+    consequences to the expected payout value of our game. Choosing $\varepsilon 
+    > 0$ will raise the expected payout while choosing $\varepsilon < 0$ will 
+    lower the expected payout. Since the row player wishes to minimize this 
+    expected value, they will optimally choose $\varepsilon = -y_i$. Thus, 
+    updating $\mathbf{y}$ with $y_i',y_k'$ will produce an optimal solution for 
+    which $y_i' = 0,y_k' = y_i + y_k$. \\
+    \end{proof}
+  \item \begin{proof}
+    This proof is a consequence of applying the previous proof to the transpose 
+    of a given payout matrix. Regardless we provide the following proof. Assume 
+    the given premise and supppose we have a feasible strategy for the column 
+    player, $\mathbf{x}$, such that $\mathbf{x}$ is optimal other than, possibly,
+    for $y_j,y_l$. Because $\mathbf{s}_j$ is dominated by $\mathbf{s}_l$, we know 
+    we can choose, at least equivalently optimal, $x_j' = x_j - \delta,x_l' = x_l 
+    + \delta$ where $\delta \in [-x_l,x_j]$ with guaranteed consequences to the 
+    expected payout value of our game. Choosing $\delta > 0$ will raise the 
+    expected payout while choosing $\delta < 0$ will lower the expected payout. 
+    Since the column player wishes to maximize this expected value, they will 
+    optimally choose $\delta = x_j$. Thus, updating $\mathbf{x}$ with $x_j',x_l'$ 
+    will produce an optimal solution for which $x_j' = 0,x_l' = x_j + x_l$. \\
+    \end{proof}
+
+  \item \begin{proof}
+    Observe the reduction of the given payout matrix. \\
+    \[P = \begin{bmatrix}
+      -6 & 2  & -4 & -7 & -5 \\
+      0  & 4  & -2 & -9 & -1 \\
+      -7 & -3 & -3 & -8 & -2 \\
+      2  & -3 & 6  & 0  & 3  \\
+    \end{bmatrix} \overset{P/\mathbf{r}_4}{\longrightarrow} \begin{bmatrix}
+      -6 & 2  & -4 & -7 & -5 \\
+      0  & 4  & -2 & -9 & -1 \\
+      -7 & -3 & -3 & -8 & -2 \\
+    \end{bmatrix} \overset{P/\mathbf{s}_4}{\longrightarrow}\] \\ 
+    \[\begin{bmatrix}
+      -6 & 2  & -4 & -5 \\
+      0  & 4  & -2 & -1 \\
+      -7 & -3 & -3 & -2 \\
+    \end{bmatrix} \overset{P/\mathbf{r}_2}{\longrightarrow} \begin{bmatrix}
+      -6 & 2  & -4 & -5 \\
+      -7 & -3 & -3 & -2 \\
+    \end{bmatrix} \overset{P/\mathbf{s}_1}{\longrightarrow} \begin{bmatrix}
+      2  & -4 & -5 \\
+      -3 & -3 & -2 \\
+    \end{bmatrix} \overset{P/\mathbf{s}_2}{\longrightarrow} \begin{bmatrix}
+      2  & -5 \\
+      -3 & -2 \\
+    \end{bmatrix}\] \\
+    \end{proof}
+\end{enumerate}
+
+\begin{prob}
+Consider the following game. Two players simultaneously raise $1$ or $2$ fingers 
+and guesses the $2$-parity of the sum. If a player guesses correctly whilst the 
+opposing player does not, then that player wins points equal to the sum while the 
+opposing player loses that many points. Do the following. \\ \pagebreak
+\begin{enumerate}
+  \item List the pure strategies of this game. \\
+  \item Write down the payout matrix for this game. \\
+  \item Formulate the row player's strategy as a linear programming problem. \\
+  \item Find the optimal expected value of this game. \\
+  \item Find the optimal strategies to this game. \\
+\end{enumerate}
+\end{prob}
+Before doing the above, we create the following framework. The choices of 
+play in this game are \\ 
+\[C = \{(a,b) : a \in \{1,2\}, b \in \{T,F\}\}\] \\
+where $a$ represents the number of fingers raised and $b$ represents the 
+predicted truth value of the statement, "the sum is even". We choose to model $C$ 
+using binary numbers i.e. \\
+\[a'b' = \begin{cases}
+  a = 1 \land b = F & 00 \\
+  a = 1 \land b = T & 01 \\
+  a = 2 \land b = F & 10 \\
+  a = 2 \land b = T & 11 \\
+\end{cases}\] \\
+\begin{enumerate}
+  \item The pure strategies of this game are the elementary basis of $\F^4$ i.e. \\ 
+    \[\{\mathbf{e}_k \in \F^4 : k \in \N \cap [1,4]\}\] \\
+  \item The following is this game's payout matrix, $P$ (with $P_{(i,j)}$ 
+    representing the row-column choices with index of the binary representation 
+    $+ 1$ i.e. $i = a'b' + 1$ for some $a',b' \in \{0,1\}$ and similarly with 
+    $j$). \\
+    \[P = \begin{bmatrix}
+      0  & 1  & 0  & -1 \\
+      -1 & 0  & 1  & 0  \\
+      0  & -1 & 0  & 1  \\
+      1  & 0  & -1 & 0  \\
+    \end{bmatrix}\] \\ \pagebreak
+  \item The optimal row player strategy can be formulated as the following linear 
+    programming problem. \\
+    \begin{center}\begin{tabular}{cccc}
+      minimize   & $\mathbf{y}^TP\mathbf{x}$ &        &     \\
+      subject to & $\mathbf{e}^T\mathbf{y}$  & $=$    & $1$ \\
+                 & $\forall_{j=1}^{4} y_j$   & $\geq$ & $0$ \\
+    \end{tabular}\end{center}
+    Where $P$ is the payout matrix, $\mathbf{y}$ is our collection of decision 
+    variables for the row player, and $\mathbf{x}$ is a given collection of 
+    decision variables for the column player. \\
+  \item $P$ is a skew matrix ($P^T = P$). As such, its optimal expected value is 
+    $0$ (because every move by one player can be exactly undone by the other). \\
+  \item The optimal strategies for row-player and column-player respectively \\
+    \[\mathbf{y} = \begin{bmatrix}
+      \frac{1}{2} \\
+      0           \\
+      \frac{1}{2} \\
+      0           \\
+    \end{bmatrix},\mathbf{x} = \begin{bmatrix}
+      \frac{1}{2} \\
+      0           \\
+      \frac{1}{2} \\
+      0           \\
+    \end{bmatrix}\] \\
+\end{enumerate}
+
+\end{document}

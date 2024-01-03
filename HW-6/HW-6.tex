@@ -1,0 +1,360 @@
+\documentclass[12pt,oneside]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{cd,tikzmark,shapes.geometric}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{pgfplots}
+\usepackage{esdiff}
+\usepackage{tabularx}
+\usepackage{array}
+\pgfplotsset{width=13cm,compat=1.9}
+
+\newenvironment{nouppercase}{%
+  \let\uppercase\relax%
+  \renewcommand{\uppercasenonmath}[1]{}}{}
+
+% THEOREMS ------------------------------------------------------
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\theoremstyle{plain}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem*{FundClaim*}{Fundamental Claim}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{question}[equation]{Question}
+\newtheorem{remark}[equation]{Remark}
+
+
+% MATH -----------------------------------------------------------
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\C}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\M}{\ensuremath \mathbb{M}}
+\newcommand{\F}{\ensuremath \mathbb{F}}
+\newcommand{\Ord}{\text{Ord}}
+
+\newcommand{\lxor}{\underline{\lor}}
+\newcommand{\lnor}{\overline{\lor}}
+\newcommand{\lnand}{\overline{\land}}
+\newcommand{\dom}[1]{\text{dom}(#1)}
+\newcommand{\ran}[1]{\text{ran}(#1)}
+\newcommand{\rref}[1]{#1^\text{ref}}
+\newcommand{\rsym}[1]{#1^\text{sym}}
+\newcommand{\rtran}[1]{#1^\text{tran}}
+\newcommand{\rirref}[1]{#1^\text{irref}}
+\newcommand{\rasym}[1]{#1^\text{asym}}
+\newcommand{\rantisym}[1]{#1^\text{antisbcbcym}}
+\newcommand{\rintran}[1]{#1^\text{intran}}
+\newcommand{\ldef}{\text{iff}_\text{def}}
+\newcommand{\lub}[1]{\text{lub}_#1}
+\newcommand{\glb}[1]{\text{glb}_#1}
+\newcommand{\canon}[1]{#1_{\text{canon}}}
+\newcommand{\pset}[2][]{\mathscr{P}^{#1}(#2)}
+\newcommand{\fset}[2][]{\mathcal{F}^{#1}(#2)}
+\newcommand{\restrict}[2]{#1\mid_{#2}}
+\newcommand{\ceil}[1]{\ensuremath \lceil #1 \rceil}
+\newcommand{\bigceil}[1]{\ensuremath \bigg\lceil #1 \bigg\rceil}
+\newcommand{\floor}[1]{\ensuremath \lfloor #1 \rfloor}
+\newcommand{\bigfloor}[1]{\ensuremath \bigg\lfloor #1 \bigg\rfloor}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\DeclareMathOperator{\vspan}{span}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\renewcommand*{\arraystretch}{1.5}
+
+\title{HW-6}
+\author{Drew Morris}
+\date{October 16th, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}
+Consider the following linear programming problem. \\
+\begin{center}\begin{tabular}{cccccccccccc}
+  maximize   & $x_0$  & $+$ & $2x_1$ & $+$ & $4x_2$ & $+$ & $8x_3$ & $+$ & $16x_4$ &        &     \\
+  subject to & $x_0$  & $+$ & $2x_1$ & $+$ & $3x_2$ & $+$ & $4x_3$ & $+$ & $5x_4$  & $\leq$ & $2$ \\
+             & $7x_0$ & $+$ & $5x_1$ & $-$ & $3x_2$ & $-$ & $2x_3$ & $+$ & $0x_4$  & $\leq$ & $0$ \\
+             & $x_0$  & $,$ & $x_1$  & $,$ & $x_2$  & $,$ & $x_3$  & $,$ & $x_4$   & $\geq$ & $0$ \\
+\end{tabular}\end{center}
+Consider the situation where $x_2,x_4$ are basic and the rest are non-basic. Find 
+the following. \\
+\begin{enumerate}
+  \item $\mathscr{B}$ \\
+  \item $\mathscr{N}$ \\
+  \item $B$ \\
+  \item $N$ \\
+  \item $\mathbf{b}$ \\
+  \item $\mathbf{c}_{\mathscr{B}}$ \\
+  \item $\mathbf{c}_{\mathscr{N}}$ \\
+  \item $B^{-1}N$ \\
+  \item $\mathbf{x}^*_{\mathscr{B}} = B^{-1}\mathbf{b}$ \\
+  \item $\zeta^* = \mathbf{c}^T_{\mathscr{B}}B^{-1}\mathbf{b}$ \\
+  \item $\mathbf{z}^*_{\mathscr{N}} = (B^{-1}N)^T\mathbf{c}_{\mathscr{B}} - \mathbf{c}_{\mathscr{N}}$ \\
+  \item The dictionary representation of this basis. \\
+\end{enumerate}
+\end{prob} \pagebreak
+\begin{proof}
+  Observe. \\
+\begin{enumerate}
+  \item $\mathscr{B} = \{2,4\}$ \\
+  \item $\mathscr{N} = \{0,1,3,5,6\}$ \\
+  \item $B = \begin{bmatrix}
+      \mathbf{v}_i \in A : i \in \mathscr{B} \\
+    \end{bmatrix} = \begin{bmatrix}
+      3  & 5 \\
+      -3 & 0 \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item $N = \begin{bmatrix}
+      \mathbf{v}_i \in A : i \in \mathscr{N} \\
+    \end{bmatrix} = \begin{bmatrix}
+      1 & 2 & 4  & 1 & 0 \\
+      7 & 5 & -2 & 0 & 1 \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item $\mathbf{b} = \begin{bmatrix}
+      2 \\
+      0 \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item $\mathbf{c}_{\mathscr{B}} = \begin{bmatrix}
+      4  \\
+      16 \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item $\mathbf{c}_{\mathscr{N}} = \begin{bmatrix}
+      1 \\
+      2 \\
+      8 \\
+      0 \\
+      0 \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item $B^{-1}N = \begin{bmatrix}
+      0            & -\frac{1}{3} \\
+      \frac{1}{5} & \frac{1}{5}   \\
+    \end{bmatrix}\begin{bmatrix}
+      1 & 2 & 4  & 1 & 0 \\
+      7 & 5 & -2 & 0 & 1 \\
+    \end{bmatrix} = \begin{bmatrix}
+      -\frac{7}{3} & -\frac{5}{3} & \frac{2}{3} & 0           & -\frac{1}{3} \\
+      \frac{8}{5}  & \frac{7}{5}  & \frac{2}{5} & \frac{1}{5} & \frac{1}{5}  \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item $\mathbf{x}^*_{\mathscr{B}} = B^{-1}\mathbf{b} = \begin{bmatrix}
+      0            & -\frac{1}{3} \\
+      \frac{1}{5} & \frac{1}{5}   \\
+    \end{bmatrix}\begin{bmatrix}
+      2 \\
+      0 \\
+    \end{bmatrix} = \begin{bmatrix}
+      0           \\
+      \frac{2}{5} \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item $\zeta^* = \mathbf{c}^T_{\mathscr{B}}B^{-1}\mathbf{b} = \mathbf{c}^T_{\mathscr{B}}\mathbf{x}^*_{\mathscr{B}} = \begin{bmatrix}
+      4 & 16 \\
+    \end{bmatrix}\begin{bmatrix}
+      0           \\
+      \frac{2}{5} \\
+    \end{bmatrix} = \frac{32}{5}$ \\ \hfill \break
+  \item $\mathbf{z}^*_{\mathscr{N}} = (B^{-1}N)^T\mathbf{c}_{\mathscr{B}} - \mathbf{c}_\mathscr{N} = 
+    \begin{bmatrix}
+      -\frac{7}{3} & \frac{8}{5} \\
+      -\frac{5}{3} & \frac{7}{5} \\
+      \frac{2}{3}  & \frac{2}{5} \\
+      0            & \frac{1}{5} \\
+      -\frac{1}{3} & \frac{1}{5} \\
+    \end{bmatrix}\begin{bmatrix}
+      4  \\
+      16 \\
+    \end{bmatrix} - \begin{bmatrix}
+      1 \\
+      2 \\
+      8 \\
+      0 \\
+      0 \\
+    \end{bmatrix} = \frac{1}{15}\begin{bmatrix}
+      244 \\
+      236 \\
+      136 \\
+      48  \\
+      28  \\
+    \end{bmatrix} - \begin{bmatrix}
+      1 \\
+      2 \\
+      8 \\
+      0 \\
+      0 \\
+    \end{bmatrix} = \frac{1}{15}\begin{bmatrix}
+      229 \\
+      206 \\
+      16  \\
+      48  \\
+      28  \\
+    \end{bmatrix}$ \\ \hfill \break
+  \item The dictionary representation of this basis is the following. \\
+  \begin{center}\begin{tabular}{|ccccccccccccc|}
+    \hline
+    $\zeta$ & $=$ & $\frac{32}{5}$ & $-$ & $\frac{56}{5}x_0$  & $-$ & $\frac{104}{5}x_1$ & $-$ & $\frac{8}{5}u_1$  & $+$ & $\frac{16}{5}x_3$ & $-$ & $\frac{16}{5}u_0$ \\
+    \hline
+    $x_2$   & $=$ & $0$            & $+$ & $\frac{7}{3}x_0$   & $-$ & $\frac{5}{3}x_1$   & $+$ & $\frac{1}{3}x_2$  & $-$ & $\frac{2}{3}x_3$  & $+$ & $0u_0$            \\
+    $x_4$   & $=$ & $\frac{2}{5}$  & $-$ & $\frac{28}{15}x_0$ & $-$ & $\frac{32}{15}x_1$ & $-$ & $\frac{4}{15}u_1$ & $+$ & $\frac{8}{15}x_3$ & $-$ & $\frac{1}{5}u_0$  \\
+    \hline
+  \end{tabular}\end{center}
+\end{enumerate}
+\end{proof}
+
+\begin{prob}
+Solve Exercise $2.1$ using the matrix form of the primal-simplex method. \\
+\end{prob}
+\begin{proof}
+Recall the initial primal dictionary for Exercise $2.1$ is the following. \\
+\begin{center}\begin{tabular}{|ccccccccccc|}
+  \hline
+  $\zeta$ & $=$ & $0$ & $+$ & $6x_0$ & $+$ & $8x_1$ & $+$ & $5x_2$ & $+$ & $9x_3$ \\
+  \hline
+  $u_0$   & $=$ & $5$ & $-$ & $2x_0$ & $-$ & $x_1$  & $-$ & $x_2$  & $-$ & $3x_3$ \\
+  $u_1$   & $=$ & $3$ & $-$ & $x_0$  & $-$ & $3x_1$ & $-$ & $x_2$  & $-$ & $2x_3$ \\
+  \hline
+\end{tabular}\end{center}
+Thus we have the following initial basis. \\
+\[\mathscr{B} = \{4,5\},\mathscr{N} = \{0,1,2,3\},\zeta^* = 0\] \\
+\[B = \begin{bmatrix}
+  1 & 0 \\
+  0 & 1 \\
+\end{bmatrix}, N = \begin{bmatrix}
+  2 & 1 & 1 & 3 \\
+  1 & 3 & 1 & 2 \\
+\end{bmatrix},B^{-1}N = \begin{bmatrix}
+  2 & 1 & 1 & 3 \\
+  1 & 3 & 1 & 2 \\
+\end{bmatrix}\] \\
+\[\mathbf{b} = \begin{bmatrix}
+  5 \\
+  3 \\
+\end{bmatrix},\mathbf{c}_{\mathscr{B}} = \begin{bmatrix}
+  0 \\
+  0 \\
+\end{bmatrix},\mathbf{c}_{\mathscr{N}} = \begin{bmatrix}
+  6 \\
+  8 \\
+  5 \\
+  9 \\
+\end{bmatrix},\mathbf{x}^*_{\mathscr{B}} = \begin{bmatrix}
+  5 \\
+  3 \\
+\end{bmatrix},\mathbf{z}^*_{\mathscr{N}} = \begin{bmatrix}
+  -6 \\
+  -8 \\
+  -5 \\
+  -9 \\
+\end{bmatrix}\] \\
+To reach our next basis we choose the following. \\
+\[j=3,t=\frac{3}{5},i=0,s=3\] 
+\[\mathbf{e}_j = \begin{bmatrix}
+  0 \\
+  0 \\
+  0 \\
+  1 \\
+\end{bmatrix},\Delta\mathbf{x}_{\mathscr{B}} = \begin{bmatrix}
+  3 \\
+  2 \\
+\end{bmatrix},\mathbf{e}_i = \begin{bmatrix}
+  1 \\
+  0 \\
+\end{bmatrix},\Delta\mathbf{z}_{\mathscr{N}} = \begin{bmatrix}
+  -2 \\
+  -1 \\
+  -1 \\
+  -3 \\
+\end{bmatrix}\] \\
+This yields our second basis. \\
+\[\mathscr{B} = \{3,5\},\mathscr{N} = \{0,1,2,4\}\] \\
+\[B = \begin{bmatrix}
+  3 & 0 \\
+  2 & 1 \\
+\end{bmatrix},N = \begin{bmatrix}
+  2 & 1 & 1 & 1 \\
+  1 & 3 & 1 & 0 \\
+\end{bmatrix},B^{-1}N = \begin{bmatrix}
+  \frac{2}{3}  & \frac{1}{3} & \frac{1}{3} & \frac{1}{3}  \\
+  -\frac{1}{3} & \frac{7}{3} & \frac{1}{3} & -\frac{2}{3} \\
+\end{bmatrix}\] \\
+\[\mathbf{x}^*_{\mathscr{B}} = \begin{bmatrix}
+  \frac{16}{5} \\
+  \frac{9}{5}
+\end{bmatrix},\mathbf{z}^*_{\mathscr{N}} = \begin{bmatrix}
+  0  \\
+  -5 \\
+  -2 \\
+  0  \\
+\end{bmatrix}\] \\
+To reach our next basis we choose the following. \\
+\[j=1,t=\frac{5}{48},i=0,s=15\] \\
+\[\mathbf{e}_j = \begin{bmatrix}
+  0 \\
+  1 \\
+  0 \\
+  0 \\
+\end{bmatrix},\Delta\mathbf{x}^*_{\mathscr{B}} = \begin{bmatrix} 
+  \frac{1}{3} \\
+  \frac{7}{3} \\
+\end{bmatrix},\mathbf{e}_i = \begin{bmatrix}
+  1 \\
+  0 \\
+\end{bmatrix},\Delta\mathbf{z}^*_{\mathscr{N}} = \begin{bmatrix}
+  -\frac{2}{3} \\
+  -\frac{1}{3} \\
+  -\frac{1}{3} \\
+  -\frac{1}{3} \\
+\end{bmatrix}\] \\
+This yields our third (and final) basis. \\
+\[\mathscr{B} = \{3,0\},\mathscr{N} = \{5,1,2,4\}\] \\
+\[B = \begin{bmatrix}
+  3 & 2 \\
+  2 & 1 \\
+\end{bmatrix}, N = \begin{bmatrix}
+  0 & 1 & 1 & 1 \\
+  1 & 3 & 1 & 0 \\
+\end{bmatrix}, B^{-1}N = \begin{bmatrix}
+  2  & 5  & 1  & -1 \\
+  -3 & -7 & -1 & 2  \\
+\end{bmatrix}\] \\
+\[\mathbf{x}^*_{\mathscr{B}} = \begin{bmatrix}
+  \frac{2279}{720} \\
+  \frac{1121}{720} \\
+\end{bmatrix},\mathbf{z}^*_{\mathscr{N}} = \begin{bmatrix}
+  10 \\
+  0  \\
+  3  \\
+  5  \\
+\end{bmatrix}\] \\
+Thus $\zeta^* = 6x_0 + 8x_1 + 5x_2 + 9x+3 = 6(2) + 8(0) + 5(1) + 9(0) = 17$. \\ 
+(I honestly don't know where I went wrong with $\mathbf{x}^*_{\mathscr{B}}$.) \\
+\end{proof}
+
+\end{document}
